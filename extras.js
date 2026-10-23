@@ -23,7 +23,7 @@ const ACTIONS={
  insecte:["Acheter du miel local à des apiculteurs qui laissent des réserves aux abeilles.","Planter des fleurs mellifères, sans pesticides.","Se renseigner sur l'origine des farines d'insectes."],
 };
 function etToiHTML(env,pil,g){const a=g||ACTIONS[env];if(!a)return "";
-  return `<section class="box etoi"><h2>${pil?"Trois décisions à ta portée":"Et toi ?"}</h2><p class="lede">${pil?"Tu es humain. Voici ce qui change la vie d'animaux comme toi.":"Trois gestes simples, si tu veux que cette vie se passe autrement."}</p><ol class="gestes">${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ol></section>`}
+  return `<section class="box etoi"><h2>${pil?tr("Trois décisions à ta portée","Three decisions within your reach"):tr("Et toi ?","What about you?")}</h2><p class="lede">${pil?tr("Tu es humain. Voici ce qui change la vie d'animaux comme toi.","You're human. Here's what changes life for animals like you."):tr("Trois gestes simples, si tu veux que cette vie se passe autrement.","Three simple things, if you want this life to go differently.")}</p><ol class="gestes">${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ol></section>`}
 
 /* ---------- 1. Sources ---------- */
 const SOURCES=[
@@ -68,12 +68,12 @@ const SOURCES=[
 ];
 function sources(){
   KEY=null;
-  app.innerHTML=`<div class="label">80 milliards · <b>Sources</b></div>
-  <h1>D'où viennent les faits du jeu.</h1>
-  <p class="lede">Chaque étape affiche un fait sous « Dans la réalité ». Ces faits viennent des sources ci-dessous. Les chiffres sont arrondis et ont été revérifiés en octobre 2026. Les numéros d'identification affichés sur les étiquettes sont fictifs ; leur format, lui, est réel. Quand les estimations divergent, le jeu donne une fourchette ou l'ordre de grandeur le plus prudent.</p>
+  app.innerHTML=`<div class="label">${tr("80 milliards","80 billion")} · <b>Sources</b></div>
+  <h1>${tr("D'où viennent les faits du jeu.","Where the game's facts come from.")}</h1>
+  <p class="lede">${tr("Chaque étape affiche un fait sous « Dans la réalité ». Ces faits viennent des sources ci-dessous. Les chiffres sont arrondis et ont été revérifiés en octobre 2026. Les numéros d'identification affichés sur les étiquettes sont fictifs ; leur format, lui, est réel. Quand les estimations divergent, le jeu donne une fourchette ou l'ordre de grandeur le plus prudent.","Each step shows a fact under “In reality”. These facts come from the sources below. Figures are rounded and were rechecked in October 2026. The identification numbers shown on tags are fictional; their format is real. Where estimates differ, the game gives a range or the most cautious order of magnitude. Some sources are in French.")}</p>
   <ul class="srcs">${SOURCES.map(([t,o,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a><span class="small">${esc(o)}</span></li>`).join("")}</ul>
-  <p class="small">Une erreur ? Note l'espèce, l'étape et la phrase, et signale-la à l'équipe du jeu.</p>
-  <div class="row"><button class="btn" id="back">Accueil</button></div>`;
+  <p class="small">${tr("Une erreur ? Note l'espèce, l'étape et la phrase, et signale-la à l'équipe du jeu.","Spotted an error? Note the species, the step and the sentence, and report it to the game team.")}</p>
+  <div class="row"><button class="btn" id="back">${tr("Accueil","Home")}</button></div>`;
   document.getElementById("back").onclick=intro;window.scrollTo(0,0);
 }
 
@@ -82,17 +82,17 @@ function makeCard(o){
   const c=document.createElement("canvas");c.width=1080;c.height=1920;const x=c.getContext("2d");
   x.fillStyle="#0e1112";x.fillRect(0,0,1080,1920);
   x.imageSmoothingEnabled=false;if(o.scene)x.drawImage(o.scene,60,140,960,540);
-  x.fillStyle="#f2c230";x.font="600 40px Archivo, Arial, sans-serif";x.fillText("80 MILLIARDS",60,100);
-  x.fillStyle="#8d9496";x.font="500 38px Archivo, Arial, sans-serif";x.fillText(o.lieu.toUpperCase(),60,760);
-  x.fillStyle="#ebe7de";x.font="700 64px Archivo, Arial, sans-serif";wrap(x,"J'ai tiré : "+o.nom,60,840,960,74);
+  x.fillStyle="#f2c230";x.font="600 40px Archivo, Arial, sans-serif";x.fillText(tr("80 MILLIARDS","80 BILLION"),60,100);
+  x.fillStyle="#8d9496";x.font="500 38px Archivo, Arial, sans-serif";x.fillText(PL(o.lieu).toUpperCase(),60,760);
+  x.fillStyle="#ebe7de";x.font="700 64px Archivo, Arial, sans-serif";wrap(x,tr("J'ai tiré : ","I drew: ")+o.nom,60,840,960,74);
   if(!o.human){x.font="700 300px Archivo, Arial, sans-serif";x.fillText(String(o.n),50,1240);
-    x.font="600 56px Archivo, Arial, sans-serif";x.fillStyle="#8d9496";x.fillText(o.u.toUpperCase()+(o.mort?" · MORT AVANT L'HEURE":""),60,1320);
+    x.font="600 56px Archivo, Arial, sans-serif";x.fillStyle="#8d9496";x.fillText(o.u.toUpperCase()+(o.mort?tr(" · MORT AVANT L'HEURE"," · DIED EARLY"):""),60,1320);
     x.fillStyle="#283033";for(let i=0;i<60;i++)x.fillRect(60+i*16,1380,10,30);x.fillStyle=o.mort?"#ebe7de":"#f2c230";x.fillRect(60,1380,Math.max(8,960*Math.min(1,o.ratio/100)),30);
-    x.fillStyle="#ebe7de";x.font="500 46px Archivo, Arial, sans-serif";x.fillText(o.pct+" de ma vie possible ("+o.nat+")",60,1480);
-    if(o.nch!=null){x.fillStyle="#e0a080";x.font="600 42px Archivo, Arial, sans-serif";x.fillText(o.nch+" choix. "+o.hu+" décisions humaines.",60,1560);x.fillStyle="#ebe7de";x.fillText("Elles ont fixé ma fin.",60,1615)}else if(o.hu){x.fillStyle="#e0a080";x.font="600 42px Archivo, Arial, sans-serif";x.fillText(o.hu+" décisions humaines ont façonné ma vie.",60,1560)}}
+    x.fillStyle="#ebe7de";x.font="500 46px Archivo, Arial, sans-serif";x.fillText(o.pct+tr(" de ma vie possible ("," of my possible life (")+o.nat+")",60,1480);
+    if(o.nch!=null){x.fillStyle="#e0a080";x.font="600 42px Archivo, Arial, sans-serif";x.fillText(LANG==="en"?o.nch+" choices. "+o.hu+" human decisions.":o.nch+" choix. "+o.hu+" décisions humaines.",60,1560);x.fillStyle="#ebe7de";x.fillText(tr("Elles ont fixé ma fin.","They set my end."),60,1615)}else if(o.hu){x.fillStyle="#e0a080";x.font="600 42px Archivo, Arial, sans-serif";x.fillText(LANG==="en"?o.hu+" human decisions shaped my life.":o.hu+" décisions humaines ont façonné ma vie.",60,1560)}}
   else{x.font="700 120px Archivo, Arial, sans-serif";x.fillText(o.t||"",60,1200)}
-  if(o.rare){x.fillStyle="#f2c230";x.fillRect(60,1620,330,70);x.fillStyle="#1a1608";x.font="700 40px Archivo, Arial, sans-serif";x.fillText("FIN RARE",90,1670)}
-  x.fillStyle="#ebe7de";x.font="600 44px Archivo, Arial, sans-serif";x.fillText(o.nch!=null?"À ton tour de décider.":"Et toi, tu serais né quoi ?",60,1790);x.fillStyle="#f2c230";x.font="600 36px Archivo, Arial, sans-serif";x.fillText(String(window.SITE||"").replace(/^https?:\/\//,"").replace(/\/$/,""),60,1856);
+  if(o.rare){x.fillStyle="#f2c230";x.fillRect(60,1620,330,70);x.fillStyle="#1a1608";x.font="700 40px Archivo, Arial, sans-serif";x.fillText(tr("FIN RARE","RARE ENDING"),90,1670)}
+  x.fillStyle="#ebe7de";x.font="600 44px Archivo, Arial, sans-serif";x.fillText(o.nch!=null?tr("À ton tour de décider.","Your turn to decide."):tr("Et toi, tu serais né quoi ?","What would you be born as?"),60,1790);x.fillStyle="#f2c230";x.font="600 36px Archivo, Arial, sans-serif";x.fillText(String(window.SITE||"").replace(/^https?:\/\//,"").replace(/\/$/,""),60,1856);
   return c;
 }
 function wrap(x,t,l,y,w,lh){const words=t.split(" ");let line="";for(const wd of words){const tt=line?line+" "+wd:wd;if(x.measureText(tt).width>w&&line){x.fillText(line,l,y);line=wd;y+=lh}else line=tt}x.fillText(line,l,y)}
@@ -100,7 +100,7 @@ let DL=null;
 async function showCard(o){
   const box=document.getElementById("cardbox");if(!box)return;
   const cv=makeCard(o);const url=cv.toDataURL("image/png");
-  box.innerHTML=`<img src="${url}" alt="Carte de résultat : ${esc(o.nom)}, ${esc(o.pct||"")} de sa vie possible" class="card-img"><p class="small">Sur téléphone : appui long sur l'image pour l'enregistrer.</p>${DL?`<button class="btn ghost" id="dlcard">Enregistrer l'image</button>`:""}`;
+  box.innerHTML=`<img src="${url}" alt="${tr("Carte de résultat : ","Result card: ")}${esc(o.nom)}, ${esc(o.pct||"")} ${tr("de sa vie possible","of its possible life")}" class="card-img"><p class="small">${tr("Sur téléphone : appui long sur l'image pour l'enregistrer.","On a phone: long-press the image to save it.")}</p>${DL?`<button class="btn ghost" id="dlcard">${tr("Enregistrer l'image","Save the image")}</button>`:""}`;
   const b=document.getElementById("dlcard");
   if(b)b.onclick=()=>cv.toBlob(bl=>{if(!DL){const u=URL.createObjectURL(bl),l=document.createElement("a");l.href=u;l.download="80-milliards.png";document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);return}DL.save({filename:"80-milliards.png",data:bl}).then(()=>{},e=>{if(e&&e.code==="unavailable")b.remove()})},"image/png");
   statMark({card:true});

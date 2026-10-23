@@ -8,16 +8,18 @@ function savePref(){try{localStorage.setItem(PREF_K,JSON.stringify(PREF))}catch(
 function applyPref(){const r=document.documentElement;if(PREF.theme==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",PREF.theme);
   r.style.setProperty("--zoom",String(PREF.size||1))}
 applyPref();
-function reglagesHTML(){return `<button class="btn quiet setb" id="setb" type="button" aria-expanded="false" aria-controls="setp">Réglages</button>
+function reglagesHTML(){return `<button class="btn quiet setb" id="setb" type="button" aria-expanded="false" aria-controls="setp">${tr("Réglages","Settings")}</button>
  <div class="setp" id="setp" hidden>
-  <div class="sg"><span class="label">Thème</span>${[["auto","Auto"],["light","Clair"],["dark","Sombre"]].map(([v,n])=>`<button type="button" class="sb ${PREF.theme===v?"on":""}" data-th="${v}">${n}</button>`).join("")}</div>
-  <div class="sg"><span class="label">Texte</span>${[[1,"A"],[1.12,"A+"],[1.25,"A++"]].map(([v,n])=>`<button type="button" class="sb ${PREF.size===v?"on":""}" data-sz="${v}">${n}</button>`).join("")}</div>
-  <div class="sg"><span class="label">Son</span>${[[true,"Activé"],[false,"Coupé"]].map(([v,n])=>`<button type="button" class="sb ${PREF.son===v?"on":""}" data-so="${v}">${n}</button>`).join("")}</div>
+  <div class="sg"><span class="label">${tr("Thème","Theme")}</span>${[["auto","Auto"],["light",tr("Clair","Light")],["dark",tr("Sombre","Dark")]].map(([v,n])=>`<button type="button" class="sb ${PREF.theme===v?"on":""}" data-th="${v}">${n}</button>`).join("")}</div>
+  <div class="sg"><span class="label">${tr("Texte","Text")}</span>${[[1,"A"],[1.12,"A+"],[1.25,"A++"]].map(([v,n])=>`<button type="button" class="sb ${PREF.size===v?"on":""}" data-sz="${v}">${n}</button>`).join("")}</div>
+  <div class="sg"><span class="label">${tr("Son","Sound")}</span>${[[true,tr("Activé","On")],[false,tr("Coupé","Off")]].map(([v,n])=>`<button type="button" class="sb ${PREF.son===v?"on":""}" data-so="${v}">${n}</button>`).join("")}</div>
+ <div class="sg"><span class="label">${tr("Langue","Language")}</span><button type="button" class="sb ${LANG==="fr"?"on":""}" data-lg="fr">Français</button><button type="button" class="sb ${LANG==="en"?"on":""}" data-lg="en">English</button></div>
  </div>`}
 function bindReglages(){const b=document.getElementById("setb"),p=document.getElementById("setp");if(!b)return;
   b.onclick=()=>{p.hidden=!p.hidden;b.setAttribute("aria-expanded",!p.hidden)};
   p.querySelectorAll("[data-th]").forEach(x=>x.onclick=()=>{PREF.theme=x.dataset.th;savePref();applyPref();refreshSet(p)});
   p.querySelectorAll("[data-sz]").forEach(x=>x.onclick=()=>{PREF.size=+x.dataset.sz;savePref();applyPref();refreshSet(p)});
+  p.querySelectorAll("[data-lg]").forEach(x=>x.onclick=()=>{if(x.dataset.lg===LANG)return;PREF.lang=x.dataset.lg;savePref();try{const u=new URL(location.href);u.searchParams.delete("lang");location.replace(u.toString())}catch(e){location.reload()}});
   p.querySelectorAll("[data-so]").forEach(x=>x.onclick=()=>{PREF.son=x.dataset.so==="true";savePref();refreshSet(p);if(PREF.son){SND.start();SND.set(SND.cur||"pre")}else SND.stop()});}
 function refreshSet(p){p.querySelectorAll("[data-th]").forEach(x=>x.classList.toggle("on",x.dataset.th===PREF.theme));p.querySelectorAll("[data-sz]").forEach(x=>x.classList.toggle("on",+x.dataset.sz===PREF.size));p.querySelectorAll("[data-so]").forEach(x=>x.classList.toggle("on",(x.dataset.so==="true")===PREF.son))}
 

@@ -176,9 +176,10 @@ button.cell:hover{border-color:var(--muted)}
 <body>
 
 
-<main class="wrap" id="app"><p class="small">Chargement…</p></main>
+<main class="wrap" id="app"><p class="small">…</p></main>
 
-<script>window.SITE="https://solfegedemanche.github.io/80-milliards/";window.TIKTOK="";window.LIVES={};function L(k,o){o.k=k;LIVES[k]=o}</script>
+<script>window.SITE="https://solfegedemanche.github.io/80-milliards/";window.TIKTOK="";window.LANG=(function(){try{const q=new URLSearchParams(location.search).get("lang");if(q==="en"||q==="fr")return q;const p=JSON.parse(localStorage.getItem("ism80_pref")||"{}");if(p.lang)return p.lang}catch(e){}return (navigator.language||"fr").toLowerCase().startsWith("fr")?"fr":"en"})();document.documentElement.lang=LANG;if(LANG==="en")document.write('<script src="en.js"><\/script>');window.LIVES={};function L(k,o){o.k=k;LIVES[k]=o}</script>
+<script src="i18n.js"></script>
 <script src="sprites.js"></script>
 <script src="scenes.js"></script>
 <script src="lives-terre.js"></script>
@@ -217,7 +218,7 @@ function wReal(k){return LIVES[k].poids}
 function wGame(k,hist){let w=Math.pow(LIVES[k].poids,.45);if(hist){const f=fam(k);const n=hist.slice(-5).filter(x=>x===f).length;w*=Math.pow(.22,n);if(hist[hist.length-1]===f)w*=.08}return w}
 function wMode(k,hist){if(OPT.mode==="brut")return wReal(k);if(OPT.mode==="hasard")return hist&&hist[hist.length-1]===fam(k)?.15:1;return wGame(k,hist)}
 function share(fn){const P=pool();const T=P.reduce((a,k)=>a+fn(k),0)||1;return k=>fn(k)/T*100}
-function fmtPct(v){if(v>=10)return Math.round(v)+" %";if(v>=1)return v.toLocaleString("fr-FR",{maximumFractionDigits:1})+" %";if(v>=.01)return v.toLocaleString("fr-FR",{maximumFractionDigits:2})+" %";if(v<=0)return "0 %";return "< 0,01 %"}
+function fmtPct(v){const P=LANG==="en"?"%":" %",LC=LANG==="en"?"en-GB":"fr-FR";if(v>=10)return Math.round(v)+P;if(v>=1)return v.toLocaleString(LC,{maximumFractionDigits:1})+P;if(v>=.01)return v.toLocaleString(LC,{maximumFractionDigits:2})+P;if(v<=0)return "0"+P;return LANG==="en"?"< 0.01%":"< 0,01 %"}
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function pick(P,w){const T=P.reduce((a,k)=>a+w(k),0);let r=Math.random()*T;for(const k of P){r-=w(k);if(r<0)return k}return P[P.length-1]}
 function drawLife(){const h=HIST();const P=pool();return pick(P.length?P:["poulet"],k=>wMode(k,h))}
@@ -226,11 +227,11 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",
 const app=document.getElementById("app");
 
 /* =================== TEMPS =================== */
-function age(d){if(d<1)return "Heure "+Math.max(1,Math.round(d*24));if(d<28)return "Jour "+Math.round(d);if(d<120)return "Semaine "+Math.round(d/7);if(d<730)return "Mois "+Math.round(d/30.4);return "An "+Math.round(d/365)}
-function dur(d){if(d<1)return {n:"<1",u:"jour",t:"quelques heures"};
-  if(d<60){const n=Math.round(d);return {n,u:n>1?"jours":"jour",t:n+(n>1?" jours":" jour")}}
-  if(d<730){const n=Math.round(d/30.4);return {n,u:"mois",t:n+" mois"}}
-  const n=Math.round(d/365);return {n,u:"ans",t:n+" ans"}}
+function age(d){if(d<1)return tr("Heure ","Hour ")+Math.max(1,Math.round(d*24));if(d<28)return tr("Jour ","Day ")+Math.round(d);if(d<120)return tr("Semaine ","Week ")+Math.round(d/7);if(d<730)return tr("Mois ","Month ")+Math.round(d/30.4);return tr("An ","Year ")+Math.round(d/365)}
+function dur(d){if(d<1)return {n:"<1",u:tr("jour","day"),t:tr("quelques heures","a few hours")};
+  if(d<60){const n=Math.round(d);return {n,u:n>1?tr("jours","days"):tr("jour","day"),t:n+(n>1?tr(" jours"," days"):tr(" jour"," day"))}}
+  if(d<730){const n=Math.round(d/30.4);return {n,u:tr("mois",n>1?"months":"month"),t:n+tr(" mois",n>1?" months":" month")}}
+  const n=Math.round(d/365);return {n,u:tr("ans",n>1?"years":"year"),t:n+tr(" ans",n>1?" years":" year")}}
 function clock(sec){const m=Math.floor(sec/60),s=sec%60;return m?`${m} min ${String(s).padStart(2,"0")} s`:`${s} s`}
 
 /* =================== ÉTAT =================== */
@@ -248,7 +249,7 @@ function rawD(j){const e=LIVES[S.k].ev[j];return (e.alt?e.alt[0]:e).d}
 function save(){if(!S)return;LS.set("ism80_save4",{...S,el:S.el+(T0?Date.now()-T0:0)})}
 window.addEventListener("pagehide",()=>{if(S&&T0)save()});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&T0)save()});
-const sub=t=>String(t||"").replaceAll("{C}",S&&S.comp?S.comp.nom:"l'autre");
+const sub=t=>String(t||"").replaceAll("{C}",S&&S.comp?S.comp.nom:tr("l'autre","the other one"));
 function compAnimal(){return S.comp&&!S.comp.h&&(S.comp.st==="ok"||S.comp.st==="sick")}
 function compHuman(){return S.comp&&S.comp.h&&S.comp.st==="ok"}
 function needOK(n){if(!n)return true;if(n==="comp")return compAnimal();if(n==="sick")return S.comp&&!S.comp.h&&S.comp.st==="sick";if(n==="hcomp")return compHuman();return true}
@@ -258,9 +259,9 @@ function curEv(){const c=S.cur;if(!c)return null;
   if(c.t==="a"){return {...ARCS[c.arc][c.idx],d:c.d,alea:1}}
   if(c.t==="r"){const R0=rareFor(S.k);return {...R0,d:c.d,end:1,rare:1}}}
 function choicesOf(e){return (e.c||[]).filter(o=>needOK(o.need)&&(!o.ok||o.ok(S)))}
-function lockOf(o){if(o.lock){const w=o.lock(S);if(w)return w}if(o.maxP!=null&&S.p>o.maxP)return "Tu as trop peur.";if(o.minTr!=null&&(S.tr==null?5:S.tr)<o.minTr)return "Tu ne fais plus confiance aux humains.";return ""}
-const TY={i:"Instinct",l:"Lien",r:"Réaction"};
-function besoinsHTML(L){if(!L.besoins)return "";const B=S.b||{};return `<div class="besoins" aria-label="Tes besoins">${Object.entries(L.besoins).map(([k,n])=>{const v=B[k];const c=v==null?"":"b"+v;const t=v==null?"pas encore":v===2?"satisfait":v===1?"en partie":"empêché";return `<span class="bz ${c}" title="${t}">${esc(n)}</span>`}).join("")}</div>`}
+function lockOf(o){if(o.lock){const w=o.lock(S);if(w)return T(w)}if(o.maxP!=null&&S.p>o.maxP)return tr("Tu as trop peur.","You're too scared.");if(o.minTr!=null&&(S.tr==null?5:S.tr)<o.minTr)return tr("Tu ne fais plus confiance aux humains.","You no longer trust humans.");return ""}
+const TY={i:tr("Instinct","Instinct"),l:tr("Lien","Bond"),r:tr("Réaction","Reaction")};
+function besoinsHTML(L){if(!L.besoins)return "";const B=S.b||{};return `<div class="besoins" aria-label="${tr("Tes besoins","Your needs")}">${Object.entries(L.besoins).map(([k,n])=>{const v=B[k];const c=v==null?"":"b"+v;const t=v==null?tr("pas encore","not yet"):v===2?tr("satisfait","met"):v===1?tr("en partie","partly"):tr("empêché","blocked");return `<span class="bz ${c}" title="${t}">${esc(n)}</span>`}).join("")}</div>`}
 
 /* =================== ACCUEIL =================== */
 function intro(){
@@ -271,28 +272,28 @@ function intro(){
   const nb=ANIMALS().length;
   const DF=defiParam();
   app.innerHTML=`
-  <div class="topbar"><div class="label"><b>80 milliards</b> · Une vie tirée au sort</div>${reglagesHTML()}</div>
-  ${DF?`<div class="defi fade"><p><b>On te lance un défi.</b> Ton ami est né ${esc(DF.nom.toLowerCase())}${DF.j?` et a vécu ${esc(dur(DF.j).t)}`:""}. Toi, tu ne choisiras pas non plus.</p></div>`:""}
-  <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="Un hangar rempli de poulets"></canvas>
-  <h1>Chaque année, plus de 80 milliards d'animaux terrestres sont élevés puis abattus. Tu vas naître.</h1>
-  <p class="lede">Tu ne choisis ni ton espèce, ni ton pays. Ta vie avance, entre ce qui arrive vraiment et ce que le hasard te réserve.</p>
-  <p class="small">Conseillé à partir de 12 ans. Le jeu parle de la vie et de la mort des animaux, avec des mots simples et sans images violentes.</p>
-  <div class="row">${valid?`<button class="btn" id="resume">Reprendre : ${esc(LIVES[sv.k].nom)}</button><button class="btn ghost" id="go">Naître à nouveau</button>`:`<button class="btn" id="go">Naître</button>`}</div>
-  <div class="row"><button class="btn ghost" id="wild">Mode Vies sauvages</button><button class="btn ghost" id="hum">Naître humain dans la chaîne</button></div>
-  <div class="row"><button class="btn ghost" id="carnet">Carnet</button><button class="btn ghost" id="src">Sources</button>${window.TIKTOK?`<a class="btn ghost" href="${esc(window.TIKTOK)}" target="_blank" rel="noopener">Suivre sur TikTok</a>`:""}<span id="ownerslot">${OWNER&&DB?`<button class="btn ghost" id="stats">Statistiques des tests</button>`:""}</span></div>
-  <section class="box" aria-label="Le tirage">
-    <h2>Le tirage · ${P.length} vies sur ${nb}</h2>
-    <div class="modes" role="radiogroup" aria-label="Mode de tirage">
-      <label><input type="radio" name="mode" value="jeu" id="m-jeu" ${OPT.mode==="jeu"?"checked":""}> Le jeu</label>
-      <label><input type="radio" name="mode" value="brut" id="m-brut" ${OPT.mode==="brut"?"checked":""}> Le réel brut</label>
-      <label><input type="radio" name="mode" value="hasard" id="m-hasard" ${OPT.mode==="hasard"?"checked":""}> Hasard pur</label>
+  <div class="topbar"><div class="label"><b>${tr("80 milliards","80 billion")}</b> · ${tr("Une vie tirée au sort","A life drawn at random")}</div>${reglagesHTML()}</div>
+  ${DF?`<div class="defi fade"><p>${LANG==="en"?`<b>You've been challenged.</b> Your friend was born a ${esc(DF.nom.toLowerCase())}${DF.j?` and lived ${esc(dur(DF.j).t)}`:""}. You won't get to choose either.`:`<b>On te lance un défi.</b> Ton ami est né ${esc(DF.nom.toLowerCase())}${DF.j?` et a vécu ${esc(dur(DF.j).t)}`:""}. Toi, tu ne choisiras pas non plus.`}</p></div>`:""}
+  <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="${tr("Un hangar rempli de poulets","A shed full of chickens")}"></canvas>
+  <h1>${tr("Chaque année, plus de 80 milliards d'animaux terrestres sont élevés puis abattus. Tu vas naître.","Every year, more than 80 billion land animals are raised and slaughtered. You're about to be born.")}</h1>
+  <p class="lede">${tr("Tu ne choisis ni ton espèce, ni ton pays. Ta vie avance, entre ce qui arrive vraiment et ce que le hasard te réserve.","You choose neither your species nor your country. Your life unfolds, between what really happens and what chance has in store.")}</p>
+  <p class="small">${tr("Conseillé à partir de 12 ans. Le jeu parle de la vie et de la mort des animaux, avec des mots simples et sans images violentes.","Recommended for ages 12 and up. The game talks about the life and death of animals, in simple words and without violent images.")}</p>
+  <div class="row">${valid?`<button class="btn" id="resume">${tr("Reprendre : ","Resume: ")}${esc(LIVES[sv.k].nom)}</button><button class="btn ghost" id="go">${tr("Naître à nouveau","Be born again")}</button>`:`<button class="btn" id="go">${tr("Naître","Be born")}</button>`}</div>
+  <div class="row"><button class="btn ghost" id="wild">${tr("Mode Vies sauvages","Wild lives mode")}</button><button class="btn ghost" id="hum">${tr("Naître humain dans la chaîne","Be born a human in the chain")}</button></div>
+  <div class="row"><button class="btn ghost" id="carnet">${tr("Carnet","Logbook")}</button><button class="btn ghost" id="src">${tr("Sources","Sources")}</button>${window.TIKTOK?`<a class="btn ghost" href="${esc(window.TIKTOK)}" target="_blank" rel="noopener">${tr("Suivre sur TikTok","Follow on TikTok")}</a>`:""}<span id="ownerslot">${OWNER&&DB?`<button class="btn ghost" id="stats">${tr("Statistiques des tests","Test statistics")}</button>`:""}</span></div>
+  <section class="box" aria-label="${tr("Le tirage","The draw")}">
+    <h2>${tr("Le tirage","The draw")} · ${P.length} ${tr("vies sur","lives out of")} ${nb}</h2>
+    <div class="modes" role="radiogroup" aria-label="${tr("Mode de tirage","Draw mode")}">
+      <label><input type="radio" name="mode" value="jeu" id="m-jeu" ${OPT.mode==="jeu"?"checked":""}> ${tr("Le jeu","The game")}</label>
+      <label><input type="radio" name="mode" value="brut" id="m-brut" ${OPT.mode==="brut"?"checked":""}> ${tr("Le réel brut","Raw reality")}</label>
+      <label><input type="radio" name="mode" value="hasard" id="m-hasard" ${OPT.mode==="hasard"?"checked":""}> ${tr("Hasard pur","Pure chance")}</label>
     </div>
-    <p class="small">${OPT.mode==="jeu"?"Les espèces les plus élevées restent les plus probables, mais une même famille revient rarement deux fois de suite. Poulet, poule pondeuse et poussin comptent comme une seule famille.":OPT.mode==="brut"?"Les vrais chiffres, sans filtre. Attends-toi à naître poulet presque à chaque fois.":"Toutes les espèces cochées ont la même chance."}</p>
+    <p class="small">${OPT.mode==="jeu"?tr("Les espèces les plus élevées restent les plus probables, mais une même famille revient rarement deux fois de suite. Poulet, poule pondeuse et poussin comptent comme une seule famille.","The most farmed species stay the most likely, but the same family rarely comes up twice in a row. Broiler chicken, laying hen and chick count as one family."):OPT.mode==="brut"?tr("Les vrais chiffres, sans filtre. Attends-toi à naître poulet presque à chaque fois.","The real numbers, unfiltered. Expect to be born a chicken almost every time."):tr("Toutes les espèces cochées ont la même chance.","All ticked species have the same chance.")}</p>
     <div class="bar" aria-hidden="true">${Object.keys(CATS).filter(c=>catTot[c]>0).map(c=>`<span style="flex:${catTot[c]};background:${CATS[c].col}"></span>`).join("")}</div>
     <div class="cats">${Object.entries(CATS).map(([c,C])=>{const ks=ANIMALS().filter(k=>LIVES[k].cat===c).sort((a,b)=>LIVES[b].poids-LIVES[a].poids);const on=OPT.cats[c];
-      return `<details class="cat ${on?"":"off"}"><summary><input type="checkbox" id="cat-${c}" data-cat="${c}" ${on?"checked":""} aria-label="${C.nom}"><span class="sw" style="background:${C.col}"></span><span>${C.nom} <span class="small">(${ks.length})</span></span><span class="pc">${on?`réel ${fmtPct(catReal[c])} · jeu ${fmtPct(catTot[c])}`:"—"}</span></summary>
-      <ul><li class="hd">Espèce</li><li class="hd">Réel</li><li class="hd">Jeu</li>${ks.map(k=>`<li>${esc(LIVES[k].nom)}${LIVES[k].sym?' <span class="small">· symbolique</span>':""}</li><li class="pc">${on?fmtPct(real(k)):"—"}</li><li class="pc">${on?fmtPct(game(k)):"—"}</li>`).join("")}</ul></details>`}).join("")}</div>
-    <p class="small">« Réel » : part des naissances par an, en ordres de grandeur (FAO, Our World in Data, Fishcount, Rethink Priorities), à vérifier. Les vies « symboliques » ont un poids fictif.</p>
+      return `<details class="cat ${on?"":"off"}"><summary><input type="checkbox" id="cat-${c}" data-cat="${c}" ${on?"checked":""} aria-label="${C.nom}"><span class="sw" style="background:${C.col}"></span><span>${C.nom} <span class="small">(${ks.length})</span></span><span class="pc">${on?`${tr("réel","real")} ${fmtPct(catReal[c])} · ${tr("jeu","game")} ${fmtPct(catTot[c])}`:"—"}</span></summary>
+      <ul><li class="hd">${tr("Espèce","Species")}</li><li class="hd">${tr("Réel","Real")}</li><li class="hd">${tr("Jeu","Game")}</li>${ks.map(k=>`<li>${esc(LIVES[k].nom)}${LIVES[k].sym?' <span class="small">· '+tr("symbolique","symbolic")+'</span>':""}</li><li class="pc">${on?fmtPct(real(k)):"—"}</li><li class="pc">${on?fmtPct(game(k)):"—"}</li>`).join("")}</ul></details>`}).join("")}</div>
+    <p class="small">${tr("« Réel » : part des naissances par an, en ordres de grandeur (FAO, Our World in Data, Fishcount, Rethink Priorities). Les vies « symboliques » ont un poids fictif.","“Real”: share of births per year, as orders of magnitude (FAO, Our World in Data, Fishcount, Rethink Priorities). “Symbolic” lives have a fictional weight.")}</p>
   </section>`;
   setScene(document.getElementById("cv"),{bg:"hangar",n:60},"poulet",42);bindReglages();
   document.getElementById("go").onclick=()=>{SND.start();LS.del("ism80_save4");WILD=false;roll(drawLife())};
@@ -311,7 +312,7 @@ function roll(k){
   const L=LIVES[k];
   if(!L.human){const h=HIST();h.push(fam(k));LS.set("ism80_hist",h.slice(-8))}
   S=newState(k);window.scrollTo(0,0);
-  app.innerHTML=`<div class="label">Tirage en cours</div><canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="Tirage"></canvas><div class="sp" id="roll" aria-live="polite">…</div><div id="rev"></div>`;
+  app.innerHTML=`<div class="label">${tr("Tirage en cours","Drawing")}</div><canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="${tr("Tirage","Draw")}"></canvas><div class="sp" id="roll" aria-live="polite">…</div><div id="rev"></div>`;
   const cv=document.getElementById("cv");const names=L.human?HUMANS():pool();
   if(REDUCE){reveal();return}
   let n=0;
@@ -321,7 +322,7 @@ function roll(k){
 function reveal(){
   const L=LIVES[S.k],t=S.tag,IT=idTag(S);
   setScene(document.getElementById("cv"),{...L.sc,...(L.ev[0].sc||{})},L.ev[0].pl||L.sprite,7);
-  document.getElementById("roll").textContent=L.human?"Tu es né humain.":"Tu es né.";
+  document.getElementById("roll").textContent=L.human?tr("Tu es né humain.","You were born human."):tr("Tu es né.","You were born.");
   const real=share(wReal)(S.k),game=share(k=>wMode(k,null))(S.k);
   const SO=SOCIAL[S.k];const C0={h:SO&&SO.t==="h"?1:0,t:SO?SO.txt:""};
   const pre=C0.h?NAMES_H:NAMES_A;
@@ -331,14 +332,14 @@ function reveal(){
     <div class="tagw"><div class="tag ${IT.none?"none":""}" aria-hidden="true"><span class="cc">${esc(IT.a)}</span><span class="num ${IT.b.length>7?"long":""}">${esc(IT.b)}</span><span class="num2">${esc(IT.c)}</span></div>${idHTML(IT,"")}</div>
     <div class="facts">
       <div class="sp">${esc(L.nom)}</div>
-      <div>${esc(S.lieu)}</div>
+      <div>${esc(PL(S.lieu))}</div>
       <div class="small">${esc(L.cond)}</div>
-      ${L.human?`<div class="small">Sans eux, pas de viande, de poisson ni de médicaments. Eux non plus n'ont pas choisi le système.</div>`
-      :`<div class="label">Dans la réalité : <b>${fmtPct(real)}</b>${L.sym?" (symbolique)":""} · dans le jeu : ${fmtPct(game)}</div><div class="small">${esc(L.natTxt)}</div>`}
+      ${L.human?`<div class="small">${tr("Sans eux, pas de viande, de poisson ni de médicaments. Eux non plus n'ont pas choisi le système.","Without them, there's no meat, no fish, no medicines. They didn't choose the system either.")}</div>`
+      :`<div class="label">${tr("Dans la réalité : ","In reality: ")}<b>${fmtPct(real)}</b>${L.sym?tr(" (symbolique)"," (symbolic)"):""} · ${tr("dans le jeu : ","in the game: ")}${fmtPct(game)}</div><div class="small">${esc(L.natTxt)}</div>`}
     </div>
   </div>
-  ${S.comp?`<p class="fade">${esc(C0.t)} ${C0.h?"Son prénom":"On l'appellera"} : <b>${esc(S.comp.nom)}</b>.</p>`:(!L.human&&!SO?`<p class="fade small">Tu vivras seul.</p>`:"")}
-  <div class="row"><button class="btn fade" id="start">Commencer ta vie</button></div>`;
+  ${S.comp?`<p class="fade">${esc(C0.t)} ${C0.h?tr("Son prénom","Their name"):tr("On l'appellera","We'll call it")}${tr(" : ",": ")}<b>${esc(S.comp.nom)}</b>.</p>`:(!L.human&&!SO?`<p class="fade small">${tr("Tu vivras seul.","You'll live alone.")}</p>`:"")}
+  <div class="row"><button class="btn fade" id="start">${tr("Commencer ta vie","Start your life")}</button></div>`;
   bindInfo(app);
   document.getElementById("start").onclick=()=>{SND.start();T0=Date.now();statStart();next()};
 }
@@ -365,41 +366,41 @@ function next(){
 }
 
 /* =================== AFFICHAGE =================== */
-function pips(v,cls){let h="";for(let i=0;i<10;i++)h+=`<i class="${i<v?'on':''}"></i>`;return `<div class="gauge ${cls}" role="img" aria-label="${v} sur 10">${h}</div>`}
+function pips(v,cls){let h="";for(let i=0;i<10;i++)h+=`<i class="${i<v?'on':''}"></i>`;return `<div class="gauge ${cls}" role="img" aria-label="${v} ${tr("sur","out of")} 10">${h}</div>`}
 function lifeBar(d,L,dead){const nat=L.nat||d;const w=Math.min(100,d/nat*100);
   return `<div class="life"><div class="track"><i class="${dead?"dead":""}" style="width:${w}%"></i></div>
-   <div class="lifel"><span class="label">${L.human?"Début":"Naissance"}</span><span class="label">${L.human?"Fin de carrière":"Vie possible : "+dur(nat).t}</span></div></div>`}
-const ST={ok:"vivant",sick:"malade",dead:"mort",gone:"séparé"};
-function compHTML(){if(!S.comp)return "";const c=S.comp;const st=c.h&&c.st==="ok"?"présent":c.h&&c.st==="gone"?"parti":ST[c.st];
-  return `<div class="comp"><span class="label">${c.h?"Ton humain":"Ton compagnon"}</span><span class="chip ${c.st}">${esc(c.nom)} · ${st}</span>${c.st==="ok"||c.st==="sick"?`<span class="hearts" aria-label="Lien ${Math.max(0,Math.min(5,c.lien))} sur 5">${"♥".repeat(Math.max(0,Math.min(5,c.lien)))}</span>`:""}</div>`}
-function huHTML(e){if(!e.hu)return `<div class="main fade"><span class="label">Main humaine</span><p>Aucune, à cet instant.</p></div>`;const [w,d]=sub(e.hu).split(" — ");return `<div class="main fade"><span class="label">Main humaine</span><p><b>${esc(w)}</b> ${esc(d||"")}</p></div>`}
+   <div class="lifel"><span class="label">${L.human?tr("Début","Start"):tr("Naissance","Birth")}</span><span class="label">${L.human?tr("Fin de carrière","End of career"):tr("Vie possible : ","Possible life: ")+dur(nat).t}</span></div></div>`}
+const ST={ok:tr("vivant","alive"),sick:tr("malade","sick"),dead:tr("mort","dead"),gone:tr("séparé","separated")};
+function compHTML(){if(!S.comp)return "";const c=S.comp;const st=c.h&&c.st==="ok"?tr("présent","here"):c.h&&c.st==="gone"?tr("parti","gone"):ST[c.st];
+  return `<div class="comp"><span class="label">${c.h?tr("Ton humain","Your human"):tr("Ton compagnon","Your companion")}</span><span class="chip ${c.st}">${esc(c.nom)} · ${st}</span>${c.st==="ok"||c.st==="sick"?`<span class="hearts" aria-label="${tr("Lien","Bond")} ${Math.max(0,Math.min(5,c.lien))} ${tr("sur","out of")} 5">${"♥".repeat(Math.max(0,Math.min(5,c.lien)))}</span>`:""}</div>`}
+function huHTML(e){if(!e.hu)return `<div class="main fade"><span class="label">${tr("Main humaine","Human hand")}</span><p>${tr("Aucune, à cet instant.","None, at this moment.")}</p></div>`;const [w,d]=sub(e.hu).split(" — ");return `<div class="main fade"><span class="label">${tr("Main humaine","Human hand")}</span><p><b>${esc(w)}</b> ${esc(d||"")}</p></div>`}
 function actorsHTML(){const m={};S.hist.forEach(h=>{if(!h.hu)return;const [w,d]=h.hu.split(" — ");(m[w]=m[w]||[]).push(d)});const ks=Object.keys(m).sort((a,b)=>m[b].length-m[a].length);if(!ks.length)return "";
-  return `<section class="box"><h2>Les humains qui ont décidé de ta vie</h2><ul class="actors">${ks.map(w=>`<li><span class="n">${m[w].length}</span><span class="w">${esc(w)}</span><span class="d">${esc(m[w][0])}</span></li>`).join("")}</ul></section>`}
+  return `<section class="box"><h2>${tr("Les humains qui ont décidé de ta vie","The humans who decided your life")}</h2><ul class="actors">${ks.map(w=>`<li><span class="n">${m[w].length}</span><span class="w">${esc(w)}</span><span class="d">${esc(m[w][0])}</span></li>`).join("")}</ul></section>`}
 function pastHTML(h){const first=h.x.split(/(?<=[.!?])\s/)[0];
-  return `<li class="past ${h.alea?"alea":""}"><span class="age">${esc(h.t)}</span><p>${esc(first)}</p>${h.l?`<p class="ch">→ ${esc(h.l)}</p>`:""}${h.r?`<p class="rs">${esc(h.r)}</p>`:""}${h.hu?`<p class="hh">Main humaine : ${esc(h.hu.split(" — ")[0])}</p>`:""}</li>`}
+  return `<li class="past ${h.alea?"alea":""}"><span class="age">${esc(h.t)}</span><p>${esc(first)}</p>${h.l?`<p class="ch">→ ${esc(h.l)}</p>`:""}${h.r?`<p class="rs">${esc(h.r)}</p>`:""}${h.hu?`<p class="hh">${tr("Main humaine : ","Human hand: ")}${esc(h.hu.split(" — ")[0])}</p>`:""}</li>`}
 function labelOf(e){return e.t||age(e.d)}
 function renderPlay(){
-  const L=LIVES[S.k];const e=curEv();const g=L.g||["Santé","Peur"];
+  const L=LIVES[S.k];const e=curEv();const g=(L.g||["Santé","Peur"]).map(x=>T(x));
   app.innerHTML=`
   <div class="head">
-    <div class="top"><span class="label">${esc(L.nom)} · ${esc(S.lieu)}</span><span class="label">${idHTML(idTag(S))}</span></div>
+    <div class="top"><span class="label">${esc(L.nom)} · ${esc(PL(S.lieu))}</span><span class="label">${idHTML(idTag(S))}</span></div>
     ${lifeBar(S.d,L)}
     <div class="gauges"><span class="label">${g[0]}</span>${pips(S.s,"")}<span class="label">${g[1]}</span>${pips(S.p,"b")}</div>
     ${besoinsHTML(L)}
     ${compHTML()}
-    ${S.hist.length&&!L.human?`<span class="label" style="color:var(--hu)">${S.hist.filter(h=>h.hu).length} décision${S.hist.filter(h=>h.hu).length>1?"s":""} humaine${S.hist.filter(h=>h.hu).length>1?"s ont":" a"} déjà pesé sur ta vie</span>`:""}
+    ${S.hist.length&&!L.human?`<span class="label" style="color:var(--hu)">${(n=>LANG==="en"?`${n} human decision${n>1?"s have":" has"} already weighed on your life`:`${n} décision${n>1?"s":""} humaine${n>1?"s ont":" a"} déjà pesé sur ta vie`)(S.hist.filter(h=>h.hu).length)}</span>`:""}
   </div>
   <ol class="tl">
     ${(S.res?S.hist.slice(0,-1):S.hist).map(pastHTML).join("")}
     <li class="now" id="now"><span class="age">${esc(labelOf(e))}</span>
-      <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="Scène : ${esc(labelOf(e))}"></canvas>
+      <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="${tr("Scène : ","Scene: ")}${esc(labelOf(e))}"></canvas>
       <p class="card fade">${esc(sub(e.x))}</p>
       ${L.human?'':huHTML(e)}
       <div id="act"></div>
     </li>
-    <li class="past"><span class="future">${e.end?"Fin":"La suite de ta vie…"}</span></li>
+    <li class="past"><span class="future">${e.end?tr("Fin","End"):tr("La suite de ta vie…","The rest of your life…")}</span></li>
   </ol>
-  <div class="topbar"><button class="btn quiet" id="quit">Sauvegarder et quitter</button>${reglagesHTML()}</div>`;
+  <div class="topbar"><button class="btn quiet" id="quit">${tr("Sauvegarder et quitter","Save and quit")}</button>${reglagesHTML()}</div>`;
   const sc={...L.sc,...(e.sc||{})};
   setScene(document.getElementById("cv"),sc,e.pl||L.sprite,(S.pi*13+S.tag.charCodeAt(0))%5+1);
   if(S.mort&&CUR){CUR.pl=null;CUR.spec={...CUR.spec,dark:.5}}
@@ -407,22 +408,22 @@ function renderPlay(){
   renderAct(e);bindInfo(app);bindReglages();SND.set(sc.bg,sc.night);
   const now=document.getElementById("now");if(S.hist.length)now.scrollIntoView({block:"start",behavior:REDUCE?"auto":"smooth"});
 }
-function reelHTML(e){const f=e.f||"";return f?`<div class="reel fade"><span class="label">Dans la réalité</span><p>${esc(sub(f))}</p></div>`:""}
+function reelHTML(e){const f=e.f||"";return f?`<div class="reel fade"><span class="label">${tr("Dans la réalité","In reality")}</span><p>${esc(sub(f))}</p></div>`:""}
 function renderAct(e){
   const act=document.getElementById("act");const ch=choicesOf(e);
   if(S.res){
-    act.innerHTML=`<p class="resp fade">${esc(S.res.r)}</p>${reelHTML(e)}<div class="row"><button class="btn" id="cont">${S.res.ending?"Voir ta fin":"Continuer"}</button></div>`;
+    act.innerHTML=`<p class="resp fade">${esc(S.res.r)}</p>${reelHTML(e)}<div class="row"><button class="btn" id="cont">${S.res.ending?tr("Voir ta fin","See your end"):tr("Continuer","Continue")}</button></div>`;
     const go=()=>{KEY=null;if(S.res.ending)end();else next()};
     document.getElementById("cont").onclick=go;KEY=k=>{if(k==="Enter")go()};
     document.getElementById("cont").focus({preventScroll:true});return;
   }
   if(!ch.length){
-    act.innerHTML=`${reelHTML(e)}<div class="row"><button class="btn" id="dec">${e.end?"Voir ta fin":"Continuer"}</button></div>`;
+    act.innerHTML=`${reelHTML(e)}<div class="row"><button class="btn" id="dec">${e.end?tr("Voir ta fin","See your end"):tr("Continuer","Continue")}</button></div>`;
     const go=()=>{KEY=null;S.hist.push({t:labelOf(e),x:sub(e.x),l:null,r:null,alea:e.alea,hu:e.hu?sub(e.hu):null});if(e.end)end();else next()};
     document.getElementById("dec").onclick=go;KEY=k=>{if(k==="Enter")go()};return;
   }
   const lk=ch.map(lockOf);if(lk.every(Boolean))lk[0]="";
-  act.innerHTML=`${e.ty&&TY[e.ty]?`<p class="ty">${TY[e.ty]}</p>`:""}<div class="choices" role="group" aria-label="Tes options">${ch.map((o,j)=>`<button class="choice" data-j="${j}" ${lk[j]?"disabled":""}><span class="k">${j+1}</span><span>${esc(sub(o.l))}${lk[j]?`<span class="why">${esc(lk[j])}</span>`:""}</span></button>`).join("")}</div>`;
+  act.innerHTML=`${e.ty&&TY[e.ty]?`<p class="ty">${TY[e.ty]}</p>`:""}<div class="choices" role="group" aria-label="${tr("Tes options","Your options")}">${ch.map((o,j)=>`<button class="choice" data-j="${j}" ${lk[j]?"disabled":""}><span class="k">${j+1}</span><span>${esc(sub(o.l))}${lk[j]?`<span class="why">${esc(lk[j])}</span>`:""}</span></button>`).join("")}</div>`;
   act.querySelectorAll(".choice:not([disabled])").forEach(b=>b.onclick=()=>decide(+b.dataset.j));
   KEY=k=>{const n=parseInt(k,10);if(n>=1&&n<=ch.length&&!lk[n-1])decide(n-1)};
 }
@@ -442,7 +443,7 @@ function decide(j){
   if(o.arc){ARCS[o.arc].forEach((_,i)=>S.queue.push({arc:o.arc,idx:i}))}
   if(S.cur.t==="a"&&S.cur.arc==="evasion"&&S.cur.idx===1&&!S.f.cache){S.queue=[]}
   if(S.cur.t==="a"&&S.cur.arc==="fugue"&&S.cur.idx===1&&!S.f.sauve){S.queue=[]}
-  if(!r)r="Tu l'as fait.";
+  if(!r)r=tr("Tu l'as fait.","You did it.");
   const ending=!!(S.mort||o.fin||e.end);
   S.hist.push({t:labelOf(e),x:sub(e.x),l:sub(o.l),r,alea:e.alea,hu:e.hu?sub(e.hu):null});
   S.res={r,ending};save();renderPlay();
@@ -452,73 +453,74 @@ function decide(j){
 function defiURL(k,j){const u=window.SITE||location.href.split("?")[0];return k?u+"?defi="+encodeURIComponent(k)+"&j="+Math.round(j||0):u}
 function defiParam(){try{const q=new URLSearchParams(location.search);const k=q.get("defi");if(!k||!LIVES[k]||LIVES[k].human)return null;return {k,nom:LIVES[k].nom,j:+q.get("j")||0}}catch(e){return null}}
 /* =================== FIN =================== */
-const BV={2:"satisfait",1:"en partie",0:"empêché"};
-function bVal(v){return v==null||v<0?"jamais":BV[v]}
+const BV={2:tr("satisfait","met"),1:tr("en partie","partly"),0:tr("empêché","blocked")};
+function bVal(v){return v==null||v<0?tr("jamais","never"):BV[v]}
 function pilotEnd(L,B,nch,nhu,rare){
-  const ch=nch>1?nch+" choix":nch===1?"1 choix":"aucun choix";
-  return `<section class="box"><p class="lede">Tu as fait ${ch}. Ils ont changé ta façon de vivre.${rare?" Ta fin a changé grâce à une main humaine, pas grâce à eux.":" Aucun n'a changé ta fin."} <b style="color:var(--hu)">${nhu} décision${nhu>1?"s":""} humaine${nhu>1?"s l'ont fixée":" l'a fixée"}.</b></p>
-   <h2>Tes besoins</h2><ul class="bilan">${Object.entries(L.besoins).map(([k,n])=>`<li>${esc(n)}</li><li class="v">${bVal(B[k])}</li>`).join("")}</ul></section>
-  ${L.cle?`<section class="box"><h2>La décision qui a le plus pesé</h2><p class="cle"><b>${esc(L.cle.hu.split(" — ")[0])}</b> ${esc(L.cle.hu.split(" — ")[1]||"")}</p>${L.cle.f?`<p class="small">${esc(L.cle.f)}</p>`:""}</section>`:""}
-  ${L.autre?`<section class="box autre" id="autre"><h2>${esc(L.autre.titre)}</h2><p class="small">La même vie, en accéléré, si cette décision avait été différente.</p><div class="row"><button class="btn" id="playautre">Voir cette autre vie</button></div></section>`:""}
-  <p class="decide">À ton tour de décider.</p>`}
+  const ch=LANG==="en"?(nch>1?nch+" choices":nch===1?"1 choice":"no choices"):(nch>1?nch+" choix":nch===1?"1 choix":"aucun choix");
+  return `<section class="box"><p class="lede">${LANG==="en"?`You made ${ch}. They changed how you lived.${rare?" Your end changed thanks to a human hand, not thanks to them.":" None of them changed your end."} <b style="color:var(--hu)">${nhu} human decision${nhu>1?"s":""} set it.</b>`:`Tu as fait ${ch}. Ils ont changé ta façon de vivre.${rare?" Ta fin a changé grâce à une main humaine, pas grâce à eux.":" Aucun n'a changé ta fin."} <b style="color:var(--hu)">${nhu} décision${nhu>1?"s":""} humaine${nhu>1?"s l'ont fixée":" l'a fixée"}.</b>`}</p>
+   <h2>${tr("Tes besoins","Your needs")}</h2><ul class="bilan">${Object.entries(L.besoins).map(([k,n])=>`<li>${esc(n)}</li><li class="v">${bVal(B[k])}</li>`).join("")}</ul></section>
+  ${L.cle?`<section class="box"><h2>${tr("La décision qui a le plus pesé","The decision that weighed most")}</h2><p class="cle"><b>${esc(L.cle.hu.split(" — ")[0])}</b> ${esc(L.cle.hu.split(" — ")[1]||"")}</p>${L.cle.f?`<p class="small">${esc(L.cle.f)}</p>`:""}</section>`:""}
+  ${L.autre?`<section class="box autre" id="autre"><h2>${esc(L.autre.titre)}</h2><p class="small">${tr("La même vie, en accéléré, si cette décision avait été différente.","The same life, fast-forwarded, if that decision had been different.")}</p><div class="row"><button class="btn" id="playautre">${tr("Voir cette autre vie","See that other life")}</button></div></section>`:""}
+  <p class="decide">${tr("À ton tour de décider.","Your turn to decide.")}</p>`}
 function playAutre(L,B){
   const box=document.getElementById("autre");const A=L.autre;let i=0,tm=null;
-  box.innerHTML=`<h2>${esc(A.titre)}</h2><canvas class="scene sc2" id="cva" width="${W}" height="${H}" role="img" aria-label="L'autre vie"></canvas><p class="vt" id="avt"></p><p class="card" id="avx" aria-live="polite"></p><div class="row"><button class="btn ghost" id="anext">Suivant</button></div>`;
+  box.innerHTML=`<h2>${esc(A.titre)}</h2><canvas class="scene sc2" id="cva" width="${W}" height="${H}" role="img" aria-label="${tr("L'autre vie","The other life")}"></canvas><p class="vt" id="avt"></p><p class="card" id="avx" aria-live="polite"></p><div class="row"><button class="btn ghost" id="anext">${tr("Suivant","Next")}</button></div>`;
   const show=()=>{const v=A.v[i];document.getElementById("avt").textContent=v.t;document.getElementById("avx").textContent=v.x;setScene(document.getElementById("cva"),{...L.sc,...(v.sc||{})},v.pl||L.sprite,i+2);
     clearTimeout(tm);if(i<A.v.length-1)tm=setTimeout(()=>{i++;show()},REDUCE?99999:3200);else fin()};
   const fin=()=>{const nb=document.getElementById("anext");if(nb)nb.remove();clearTimeout(tm);
-    box.insertAdjacentHTML("beforeend",`<h2 style="margin-top:18px">Tes besoins, dans les deux vies</h2><ul class="bilan" style="grid-template-columns:1fr auto auto"><li class="small">Besoin</li><li class="small">Ta vie</li><li class="small">L'autre</li>${Object.entries(L.besoins).map(([k,n])=>`<li>${esc(n)}</li><li class="v">${bVal(B[k])}</li><li class="v">${bVal(A.b[k])}</li>`).join("")}</ul>${A.f?`<div class="reel"><span class="label">Dans la réalité</span><p>${esc(A.f)}</p></div>`:""}`)};
+    box.insertAdjacentHTML("beforeend",`<h2 style="margin-top:18px">${tr("Tes besoins, dans les deux vies","Your needs, in both lives")}</h2><ul class="bilan" style="grid-template-columns:1fr auto auto"><li class="small">${tr("Besoin","Need")}</li><li class="small">${tr("Ta vie","Your life")}</li><li class="small">${tr("L'autre","The other")}</li>${Object.entries(L.besoins).map(([k,n])=>`<li>${esc(n)}</li><li class="v">${bVal(B[k])}</li><li class="v">${bVal(A.b[k])}</li>`).join("")}</ul>${A.f?`<div class="reel"><span class="label">${tr("Dans la réalité","In reality")}</span><p>${esc(A.f)}</p></div>`:""}`)};
   document.getElementById("anext").onclick=()=>{if(i<A.v.length-1){i++;show()}};
   show();box.scrollIntoView({behavior:REDUCE?"auto":"smooth",block:"start"});
 }
 function compEnd(L){if(!S.comp)return "";const c=S.comp,n=esc(c.nom);
-  if(c.h)return c.st==="gone"?`${n} est parti avant toi. Tu l'as attendu.`:c.lien>=4?`${n} ne t'oubliera pas.`:`${n} se souviendra peut-être de toi.`;
-  if(c.st==="dead")return `${n} est mort avant toi, ${dur(c.dd).t==="quelques heures"?"le premier jour":"à "+dur(c.dd).t}.`;
-  if(c.st==="gone")return `On t'a séparé de ${n}. Tu ne l'as jamais revu.`;
-  if(S.rare)return `${n} n'a pas eu ta chance.`;
-  return c.lien>=4?`${n} était encore contre toi à la fin. Vous ne vous êtes presque jamais quittés.`:`${n} était encore là, quelque part, à la fin.`}
+  if(c.h)return c.st==="gone"?tr(`${n} est parti avant toi. Tu l'as attendu.`,`${n} left before you. You waited for them.`):c.lien>=4?tr(`${n} ne t'oubliera pas.`,`${n} won't forget you.`):tr(`${n} se souviendra peut-être de toi.`,`${n} might remember you.`);
+  if(c.st==="dead")return LANG==="en"?`${n} died before you, ${c.dd<1?"on the first day":"at "+dur(c.dd).t}.`:`${n} est mort avant toi, ${c.dd<1?"le premier jour":"à "+dur(c.dd).t}.`;
+  if(c.st==="gone")return tr(`On t'a séparé de ${n}. Tu ne l'as jamais revu.`,`You were separated from ${n}. You never saw them again.`);
+  if(S.rare)return tr(`${n} n'a pas eu ta chance.`,`${n} wasn't as lucky as you.`);
+  return c.lien>=4?tr(`${n} était encore contre toi à la fin. Vous ne vous êtes presque jamais quittés.`,`${n} was still pressed against you at the end. You were almost never apart.`):tr(`${n} était encore là, quelque part, à la fin.`,`${n} was still there, somewhere, at the end.`)}
 function end(){
   KEY=null;const L=LIVES[S.k];
   const sec=Math.max(1,Math.round((S.el+(T0?Date.now()-T0:0))/1000));T0=0;
   const lived=S.d;const D=dur(lived);const nat=L.nat||lived;const ratio=lived/nat*100;
   const realLife=!L.human&&!L.sym;
   const born=realLife?Math.round(L.poids*1e6/31536000*sec):0;
-  const others=Array.from({length:4},()=>drawReal()).map(k=>{const V=LIVES[k].ev;const fe=V.find(e=>e.end)||V[V.length-1];return {n:LIVES[k].nom,l:rnd(LIVES[k].lieux),d:fe.d,nat:LIVES[k].nat}});
-  const shareTxt=L.human?`80 milliards — J'ai joué : ${L.nom} (${S.lieu}). Ma partie a duré ${clock(sec)}.`
-    :`80 milliards — J'ai tiré : ${L.nom} (${S.lieu}). J'ai vécu ${D.t} sur ${dur(nat).t} possibles (${fmtPct(ratio)}).${S.rare?" Fin rare.":""}${S.mort?" Mort avant l'heure.":""}${L.besoins?` ${S.nch||0} choix, ${S.hist.filter(h=>h.hu).length} décisions humaines. À ton tour de décider.`:""}`+" "+defiURL(S.k,lived);
+  const others=Array.from({length:4},()=>drawReal()).map(k=>{const V=LIVES[k].ev;const fe=V.find(e=>e.end)||V[V.length-1];return {n:LIVES[k].nom,l:PL(rnd(LIVES[k].lieux)),d:fe.d,nat:LIVES[k].nat}});
+  const PLC=PL(S.lieu),NHU=S.hist.filter(h=>h.hu).length;const shareTxt=LANG==="en"?(L.human?`80 billion — I played: ${L.nom} (${PLC}). My game lasted ${clock(sec)}.`
+    :`80 billion — I drew: ${L.nom} (${PLC}). I lived ${D.t} out of ${dur(nat).t} possible (${fmtPct(ratio)}).${S.rare?" Rare ending.":""}${S.mort?" Died early.":""}${L.besoins?` ${S.nch||0} choices, ${NHU} human decisions. Your turn to decide.`:""}`+" "+defiURL(S.k,lived)):(L.human?`80 milliards — J'ai joué : ${L.nom} (${PLC}). Ma partie a duré ${clock(sec)}.`
+    :`80 milliards — J'ai tiré : ${L.nom} (${PLC}). J'ai vécu ${D.t} sur ${dur(nat).t} possibles (${fmtPct(ratio)}).${S.rare?" Fin rare.":""}${S.mort?" Mort avant l'heure.":""}${L.besoins?` ${S.nch||0} choix, ${NHU} décisions humaines. À ton tour de décider.`:""}`+" "+defiURL(S.k,lived));
   const C=LS.get("ism80_carnet5",{v:{},lives:0,sec:0,days:0,rares:0});
   const en=C.v[S.k]||{n:0,lieux:[],rare:0};en.n++;if(S.rare)en.rare=(en.rare||0)+1;if(!en.lieux.includes(S.lieu))en.lieux.push(S.lieu);C.v[S.k]=en;C.lives++;C.sec+=sec;if(S.rare)C.rares=(C.rares||0)+1;if(!L.human)C.days+=lived;LS.set("ism80_carnet5",C);LS.del("ism80_save4");
   const lastE=curEv()||L.ev[L.ev.length-1];
   const endSc=S.mort?{...L.sc,...(lastE.sc||{}),dark:.55,nopl:1}:{...L.sc,...(lastE.sc||{})};
   app.innerHTML=`
-  <div class="label">${esc(L.nom)} · ${esc(S.lieu)} · ${idHTML(idTag(S))}</div>
-  <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="Dernière scène"></canvas>
-  ${S.rare?`<span class="rare">Fin rare</span>`:""}
-  ${L.human?`<div class="fade"><div class="big">${esc(lastE.t||"")}</div><div class="label">fin de ton histoire</div></div>`
-   :`<div class="fade"><div class="big">${esc(D.n)}</div><div class="label">${esc(D.u)}${S.mort?" · mort avant l'heure":""}</div></div>${lifeBar(lived,L,true)}`}
+  <div class="label">${esc(L.nom)} · ${esc(PL(S.lieu))} · ${idHTML(idTag(S))}</div>
+  <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="${tr("Dernière scène","Last scene")}"></canvas>
+  ${S.rare?`<span class="rare">${tr("Fin rare","Rare ending")}</span>`:""}
+  ${L.human?`<div class="fade"><div class="big">${esc(lastE.t||"")}</div><div class="label">${tr("fin de ton histoire","end of your story")}</div></div>`
+   :`<div class="fade"><div class="big">${esc(D.n)}</div><div class="label">${esc(D.u)}${S.mort?tr(" · mort avant l'heure"," · died early"):""}</div></div>${lifeBar(lived,L,true)}`}
   <div class="stat fade">
-    ${L.human?`<p>${S.f.arret?"Tu as arrêté avant la fin.":"Tu es allé au bout de cette histoire."} ${(L.g||[])[1]||"Moral"} final : ${S.p} sur 10. ${(L.g||[])[0]||"Argent"} : ${S.s} sur 10.</p>`
-    :`<p>Tu as vécu ${esc(D.t)}. ${esc(L.natTxt)}</p><p><b>${fmtPct(ratio)}</b> de ta vie possible.</p><p>${compEnd(L)}</p>`}
+    ${L.human?`<p>${S.f.arret?tr("Tu as arrêté avant la fin.","You stopped before the end."):tr("Tu es allé au bout de cette histoire.","You saw this story through to the end.")} ${T((L.g||[])[1]||"Moral")}${tr(" final : "," at the end: ")}${S.p} ${tr("sur","out of")} 10. ${T((L.g||[])[0]||"Argent")}${tr(" : ",": ")}${S.s} ${tr("sur","out of")} 10.</p>`
+    :`<p>${tr("Tu as vécu ","You lived ")}${esc(D.t)}. ${esc(L.natTxt)}</p><p><b>${fmtPct(ratio)}</b> ${tr("de ta vie possible.","of your possible life.")}</p><p>${compEnd(L)}</p>`}
   </div>
-  ${S.rare?`<div class="reel"><span class="label">Dans la réalité</span><p>${esc(lastE.f||"")}</p></div>`:""}
+  ${S.rare?`<div class="reel"><span class="label">${tr("Dans la réalité","In reality")}</span><p>${esc(lastE.f||"")}</p></div>`:""}
   ${L.besoins?pilotEnd(L,S.b||{},S.nch||0,S.hist.filter(h=>h.hu).length,S.rare||!!S.f.adoptee)+etToiHTML(S.env,true,L.gestes):""}
-  <p>Ta partie a duré ${clock(sec)}.${realLife?` Pendant ce temps, environ <b>${born.toLocaleString("fr-FR")}</b> autres animaux de ton espèce sont nés dans le monde.`:""}</p>
-  ${!L.human&&PROD[S.k]?`<section class="box"><h2>Ce que ta vie est devenue pour les humains</h2><p class="prod">${esc(S.mort&&!PROD[S.k].startsWith("Rien")?"Rien. Tu es mort avant d'avoir servi. Pour ceux qui t'ont fait naître, une perte dans un registre.":PROD[S.k])}</p></section>`:""}
+  <p>${tr("Ta partie a duré ","Your game lasted ")}${clock(sec)}.${realLife?(LANG==="en"?` In that time, about <b>${born.toLocaleString("en-GB")}</b> other animals of your species were born around the world.`:` Pendant ce temps, environ <b>${born.toLocaleString("fr-FR")}</b> autres animaux de ton espèce sont nés dans le monde.`):""}</p>
+  ${!L.human&&PROD[S.k]?`<section class="box"><h2>${tr("Ce que ta vie est devenue pour les humains","What your life became for humans")}</h2><p class="prod">${esc(S.mort&&!PROD[S.k].startsWith(T("Rien"))?tr("Rien. Tu es mort avant d'avoir servi. Pour ceux qui t'ont fait naître, une perte dans un registre.","Nothing. You died before you could be used. For those who bred you, a loss in a register."):PROD[S.k])}</p></section>`:""}
   ${L.human?"":actorsHTML()}
   <p class="small">${esc(L.note)}</p>
   ${L.human||L.besoins?"":etToiHTML(S.env)}
-  <section class="box"><h2>Ta ligne de vie</h2><ol class="tl">${S.hist.map(pastHTML).join("")}${S.mort?`<li class="fin"><span class="age">${esc(labelOf(lastE))}</span><p class="small">Ta vie s'arrête ici, plus tôt que prévu.</p></li>`:""}</ol></section>
-  ${L.human?"":`<section class="box"><h2>Nés à la même seconde que toi, dans la réalité</h2>
+  <section class="box"><h2>${tr("Ta ligne de vie","Your lifeline")}</h2><ol class="tl">${S.hist.map(pastHTML).join("")}${S.mort?`<li class="fin"><span class="age">${esc(labelOf(lastE))}</span><p class="small">${tr("Ta vie s'arrête ici, plus tôt que prévu.","Your life ends here, sooner than planned.")}</p></li>`:""}</ol></section>
+  ${L.human?"":`<section class="box"><h2>${tr("Nés à la même seconde que toi, dans la réalité","Born in the same second as you, in reality")}</h2>
     <ul class="par">${others.map(o=>`<li><span>${esc(o.n)} · ${esc(o.l)}</span><span>${dur(o.d).t} / ${dur(o.nat).t}</span></li>`).join("")}</ul></section>`}
-  <div class="row"><button class="btn" id="again">Renaître</button>${navigator.share?`<button class="btn ghost" id="natshare">Partager</button>`:""}<button class="btn ghost" id="mkcard">Créer ma carte</button><button class="btn ghost" id="copy">Copier mon résultat</button><button class="btn ghost" id="carnet">Carnet</button><button class="btn ghost" id="home">Accueil</button></div>
+  <div class="row"><button class="btn" id="again">${tr("Renaître","Be born again")}</button>${navigator.share?`<button class="btn ghost" id="natshare">${tr("Partager","Share")}</button>`:""}<button class="btn ghost" id="mkcard">${tr("Créer ma carte","Make my card")}</button><button class="btn ghost" id="copy">${tr("Copier mon résultat","Copy my result")}</button><button class="btn ghost" id="carnet">${tr("Carnet","Logbook")}</button><button class="btn ghost" id="home">${tr("Accueil","Home")}</button></div>
   <div class="toast" id="toast" aria-live="polite"></div>
   <div id="cardbox"></div>
-  <p class="small">Version de test. Chaque fait est sourcé. Une erreur ? La page Sources dit comment la signaler.</p>`;
+  <p class="small">${tr("Version de test. Chaque fait est sourcé. Une erreur ? La page Sources dit comment la signaler.","Test version. Every fact is sourced. Spotted an error? The Sources page explains how to report it.")}</p>`;
   setScene(document.getElementById("cv"),endSc,lastE.pl||L.sprite,3);bindInfo(app);SND.mood(true);const cardK=S.k,cardD=lived;
   statEnd({sec,steps:S.hist.length,rare:S.rare,mort:!!S.mort});
   const cardData={nom:L.nom,lieu:S.lieu,human:L.human,n:D.n,u:D.u,mort:!!S.mort,ratio,pct:fmtPct(ratio),nat:dur(nat).t,rare:S.rare,t:lastE.t,hu:S.hist.filter(h=>h.hu).length,nch:L.besoins?(S.nch||0):null,scene:document.getElementById("cv")};
   document.getElementById("mkcard").onclick=()=>{showCard(cardData);document.getElementById("cardbox").scrollIntoView({behavior:REDUCE?"auto":"smooth"})};
-  const ns=document.getElementById("natshare");if(ns)ns.onclick=async()=>{statMark({partage:true});const DU=defiURL(LIVES[cardK].human?null:cardK,cardD);const base={title:"80 milliards",text:shareTxt.replace(" "+DU,""),url:DU};
+  const ns=document.getElementById("natshare");if(ns)ns.onclick=async()=>{statMark({partage:true});const DU=defiURL(LIVES[cardK].human?null:cardK,cardD);const base={title:tr("80 milliards","80 billion"),text:shareTxt.replace(" "+DU,""),url:DU};
     try{const cv=makeCard(cardData);const bl=await new Promise(r=>cv.toBlob(r,"image/png"));const f=bl&&new File([bl],"80-milliards.png",{type:"image/png"});
       if(f&&navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({...base,files:[f]});else await navigator.share(base)}catch(e){}};
   const pa=document.getElementById("playautre");if(pa){const B0={...(S.b||{})};pa.onclick=()=>playAutre(L,B0)}
@@ -527,7 +529,7 @@ function end(){
   document.getElementById("carnet").onclick=carnet;
   document.getElementById("home").onclick=intro;
   document.getElementById("copy").onclick=()=>{const t=document.getElementById("toast");
-    statMark({partage:true});try{navigator.clipboard.writeText(shareTxt).then(()=>t.textContent="Résultat copié.",()=>t.textContent=shareTxt)}catch(e){t.textContent=shareTxt}};
+    statMark({partage:true});try{navigator.clipboard.writeText(shareTxt).then(()=>t.textContent=tr("Résultat copié.","Result copied."),()=>t.textContent=shareTxt)}catch(e){t.textContent=shareTxt}};
   window.scrollTo(0,0);
 }
 
@@ -536,25 +538,26 @@ function carnet(){
   KEY=null;const C=LS.get("ism80_carnet5",{v:{},lives:0,sec:0,days:0,rares:0});
   const groups=[...Object.keys(CATS),"humain"];const all=Object.keys(LIVES);const found=all.filter(k=>C.v[k]).length;
   app.innerHTML=`
-  <div class="label">Carnet · <b>${found} / ${all.length}</b> vies découvertes</div>
-  <h1>Les vies que tu as tirées.</h1>
+  <div class="label">${tr("Carnet","Logbook")} · <b>${found} / ${all.length}</b> ${tr("vies découvertes","lives discovered")}</div>
+  <h1>${tr("Les vies que tu as tirées.","The lives you've drawn.")}</h1>
   <div class="totals">
-    <div><strong>${C.lives}</strong><span class="label">vies</span></div>
+    <div><strong>${C.lives}</strong><span class="label">${tr("vies","lives")}</span></div>
     <div><strong>${Math.round(C.sec/60)}</strong><span class="label">min</span></div>
-    <div><strong>${Math.round(C.days).toLocaleString("fr-FR")}</strong><span class="label">jours vécus</span></div>
-    <div><strong>${C.rares||0}</strong><span class="label">fins rares</span></div>
+    <div><strong>${Math.round(C.days).toLocaleString(LANG==="en"?"en-GB":"fr-FR")}</strong><span class="label">${tr("jours vécus","days lived")}</span></div>
+    <div><strong>${C.rares||0}</strong><span class="label">${tr("fins rares","rare endings")}</span></div>
   </div>
-  <p class="small">Touche une vie découverte pour la revivre.</p>
-  ${groups.map(g=>{const ks=all.filter(k=>LIVES[k].cat===g);return `<section class="box"><h2>${g==="humain"?"Humains dans la chaîne":CATS[g].nom}</h2><div class="grid">${ks.map(k=>{const e=C.v[k];const L=LIVES[k];
+  <p class="small">${tr("Touche une vie découverte pour la revivre.","Tap a discovered life to live it again.")}</p>
+  ${groups.map(g=>{const ks=all.filter(k=>LIVES[k].cat===g);return `<section class="box"><h2>${g==="humain"?tr("Humains dans la chaîne","Humans in the chain"):CATS[g].nom}</h2><div class="grid">${ks.map(k=>{const e=C.v[k];const L=LIVES[k];
     return `<${e?`button type="button" data-k="${k}"`:"div"} class="cell ${e?'':'locked'}">
     <span class="dot" style="background:${e?(CATS[L.cat]||{col:"#e0a080"}).col:"var(--dim)"}" aria-hidden="true"></span>
     <span class="n">${e?esc(L.nom):"???"}</span>
-    <span class="small">${e?`${e.n} fois${e.rare?` · ${e.rare} fin rare`:""} · ${esc(e.lieux.slice(0,2).join(", "))}`:"Pas encore tirée"}</span></${e?"button":"div"}>`}).join("")}</div></section>`}).join("")}
-  <div class="row"><button class="btn" id="back">Accueil</button></div>`;
+    <span class="small">${e?`${e.n} ${tr("fois","times")}${e.rare?` · ${e.rare} ${tr("fin rare","rare ending")}`:""} · ${esc(e.lieux.slice(0,2).map(PL).join(" / "))}`:tr("Pas encore tirée","Not drawn yet")}</span></${e?"button":"div"}>`}).join("")}</div></section>`}).join("")}
+  <div class="row"><button class="btn" id="back">${tr("Accueil","Home")}</button></div>`;
   app.querySelectorAll("button.cell").forEach(b=>b.onclick=()=>{LS.del("ism80_save4");roll(b.dataset.k)});
   document.getElementById("back").onclick=intro;
   window.scrollTo(0,0);
 }
+applyEN();
 document.addEventListener("keydown",e=>{if(!KEY||e.target.tagName==="INPUT")return;if(e.key==="Enter"&&e.target.tagName==="BUTTON")return;KEY(e.key)});
 intro();
 </script>
