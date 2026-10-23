@@ -22,8 +22,8 @@ const ACTIONS={
  spec:["Refuser les activités avec contact : balades à dos d'éléphant, photos avec des félins.","Choisir des sanctuaires qui n'autorisent ni contact ni reproduction.","Ne pas partager de vidéos d'animaux sauvages traités en animaux de compagnie."],
  insecte:["Acheter du miel local à des apiculteurs qui laissent des réserves aux abeilles.","Planter des fleurs mellifères, sans pesticides.","Se renseigner sur l'origine des farines d'insectes."],
 };
-function etToiHTML(env){const a=ACTIONS[env];if(!a)return "";
-  return `<section class="box etoi"><h2>Et toi ?</h2><p class="lede">Trois gestes simples, si tu veux que cette vie se passe autrement.</p><ol class="gestes">${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ol></section>`}
+function etToiHTML(env,pil,g){const a=g||ACTIONS[env];if(!a)return "";
+  return `<section class="box etoi"><h2>${pil?"Trois décisions à ta portée":"Et toi ?"}</h2><p class="lede">${pil?"Tu es humain. Voici ce qui change la vie d'animaux comme toi.":"Trois gestes simples, si tu veux que cette vie se passe autrement."}</p><ol class="gestes">${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ol></section>`}
 
 /* ---------- 1. Sources ---------- */
 const SOURCES=[
@@ -53,6 +53,12 @@ const SOURCES=[
  ["Pythons royaux exportés d'Afrique de l'Ouest","Harrington et al., Nature Conservation, 2020","https://natureconservation.pensoft.net/article_preview.php?id=51270"],
  ["Baleine franche de l'Atlantique Nord","NOAA Fisheries","https://www.fisheries.noaa.gov/species/north-atlantic-right-whale"],
  ["Suivi du loup en France","Office français de la biodiversité","https://www.loupfrance.fr/"],
+ ["Besoins comportementaux des poules pondeuses (nid, perchoir, bain de poussière)","RSPCA Australie","https://kb.rspca.org.au/knowledge-base/why-is-it-important-for-layer-hens-to-express-normal-behaviours/"],
+ ["Les cages aménagées face aux besoins des poules","CIWF, note de position 2024","https://ciwf.com/media/7456742/ciwf-position-note-on-enriched-cages-2024.pdf"],
+ ["La boue et la thermorégulation chez le porc","RSPCA Australie","https://kb.rspca.org.au/knowledge-base/why-is-wallowing-important-for-pig-welfare"],
+ ["Séparation de la vache et du veau","Chaire bien-être animal, VetAgro Sup","https://chaire-bea.vetagro-sup.fr/en/calves-are-separated-from-their-mothers-at-birth-true-or-false/"],
+ ["Empreinte olfactive et retour des salmonidés vers leur rivière","Ifremer","https://archimer.ifremer.fr/doc/00000/6053"],
+ ["Règlement européen sur l'agriculture biologique (2018/848)","EUR-Lex","https://eur-lex.europa.eu/eli/reg/2018/848/oj"],
 ];
 function sources(){
   KEY=null;
@@ -77,10 +83,10 @@ function makeCard(o){
     x.font="600 56px Archivo, Arial, sans-serif";x.fillStyle="#8d9496";x.fillText(o.u.toUpperCase()+(o.mort?" · MORT AVANT L'HEURE":""),60,1320);
     x.fillStyle="#283033";for(let i=0;i<60;i++)x.fillRect(60+i*16,1380,10,30);x.fillStyle=o.mort?"#ebe7de":"#f2c230";x.fillRect(60,1380,Math.max(8,960*Math.min(1,o.ratio/100)),30);
     x.fillStyle="#ebe7de";x.font="500 46px Archivo, Arial, sans-serif";x.fillText(o.pct+" de ma vie possible ("+o.nat+")",60,1480);
-    if(o.hu){x.fillStyle="#e0a080";x.font="600 42px Archivo, Arial, sans-serif";x.fillText(o.hu+" décisions humaines ont façonné ma vie.",60,1560)}}
+    if(o.nch!=null){x.fillStyle="#e0a080";x.font="600 42px Archivo, Arial, sans-serif";x.fillText(o.nch+" choix. "+o.hu+" décisions humaines.",60,1560);x.fillStyle="#ebe7de";x.fillText("Elles ont fixé ma fin.",60,1615)}else if(o.hu){x.fillStyle="#e0a080";x.font="600 42px Archivo, Arial, sans-serif";x.fillText(o.hu+" décisions humaines ont façonné ma vie.",60,1560)}}
   else{x.font="700 120px Archivo, Arial, sans-serif";x.fillText(o.t||"",60,1200)}
   if(o.rare){x.fillStyle="#f2c230";x.fillRect(60,1620,330,70);x.fillStyle="#1a1608";x.font="700 40px Archivo, Arial, sans-serif";x.fillText("FIN RARE",90,1670)}
-  x.fillStyle="#ebe7de";x.font="600 44px Archivo, Arial, sans-serif";x.fillText("Et toi, tu serais né quoi ?",60,1790);x.fillStyle="#f2c230";x.font="600 36px Archivo, Arial, sans-serif";x.fillText(String(window.SITE||"").replace(/^https?:\/\//,"").replace(/\/$/,""),60,1856);
+  x.fillStyle="#ebe7de";x.font="600 44px Archivo, Arial, sans-serif";x.fillText(o.nch!=null?"À ton tour de décider.":"Et toi, tu serais né quoi ?",60,1790);x.fillStyle="#f2c230";x.font="600 36px Archivo, Arial, sans-serif";x.fillText(String(window.SITE||"").replace(/^https?:\/\//,"").replace(/\/$/,""),60,1856);
   return c;
 }
 function wrap(x,t,l,y,w,lh){const words=t.split(" ");let line="";for(const wd of words){const tt=line?line+" "+wd:wd;if(x.measureText(tt).width>w&&line){x.fillText(line,l,y);line=wd;y+=lh}else line=tt}x.fillText(line,l,y)}

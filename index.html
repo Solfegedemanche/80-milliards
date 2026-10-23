@@ -1,6 +1,19 @@
-<!doctype html><html lang="fr"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><meta name="description" content="Un jeu gratuit : tu nais au hasard dans la peau d'un animal, selon les vrais chiffres, et tu vis ta vie jusqu'au bout. 3 à 10 minutes."><meta property="og:title" content="80 milliards — Une vie tirée au sort"><meta property="og:description" content="Tu ne choisis pas ce que tu es. Joue la vie que le hasard te donne."><meta property="og:url" content="https://solfegedemanche.github.io/80-milliards/"><meta property="og:type" content="website"><meta name="theme-color" content="#0e1112"></head><body>
-<title>80 milliards</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>80 milliards — Une vie tirée au sort</title>
+<meta name="description" content="Tu nais au hasard dans la peau d'un animal, selon les vrais chiffres. Vis ta vie jusqu'au bout et découvre chaque décision humaine qui l'a façonnée.">
+<meta name="theme-color" content="#0e1112">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="80 milliards — Une vie tirée au sort">
+<meta property="og:description" content="Tu nais au hasard dans la peau d'un animal, selon les vrais chiffres. Vis ta vie jusqu'au bout et découvre chaque décision humaine qui l'a façonnée.">
+<meta property="og:image" content="https://solfegedemanche.github.io/80-milliards/og.png">
+<meta property="og:url" content="https://solfegedemanche.github.io/80-milliards/">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
@@ -86,6 +99,14 @@ li.now>.age{color:var(--tag);font-size:20px;font-weight:700}
 .choice{text-align:left;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:var(--serif);font-size:18px;display:flex;gap:12px;align-items:baseline}
 .choice:hover{border-color:var(--muted)}
 .choice .k{font-family:var(--px);font-size:13px;font-weight:600;color:var(--muted)}
+.choice[disabled]{opacity:.45;cursor:default}.choice[disabled]:hover{border-color:var(--line)}.choice .why{display:block;font-family:var(--px);font-size:12px;color:var(--muted);margin-top:3px}
+.ty{font-family:var(--px);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--reel);margin:0 0 6px}
+.besoins{display:flex;flex-wrap:wrap;gap:6px}.bz{font-family:var(--px);font-size:12px;border:1px solid var(--line);border-radius:20px;padding:2px 9px;color:var(--muted)}
+.bz.b2{border-color:#6a8a62;color:#b8d4ae}.bz.b1{border-color:#a8843a;color:#e8c47a}.bz.b0{border-color:#7a4a44;color:#d39a90;text-decoration:line-through}
+.bilan{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr auto;gap:6px 12px}.bilan .v{font-family:var(--px);font-size:13px}
+.cle{border-left:3px solid var(--hu);padding:4px 0 4px 14px}.cle b{color:var(--hu)}
+.autre .sc2{width:100%;height:auto;image-rendering:pixelated;border-radius:8px;display:block}.autre .vt{font-family:var(--px);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:10px}
+.decide{font-family:var(--serif);font-size:32px;line-height:1.15;margin:28px 0 6px}
 .future{color:var(--dim);font-family:var(--px);font-size:13px}
 .main{border-left:3px solid var(--hu);padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:2px}
 .main .label{color:var(--hu)}
@@ -135,6 +156,9 @@ button.cell:hover{border-color:var(--muted)}
 @keyframes fade{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.fade{animation:none}.track i{transition:none}}
 </style>
+</head>
+<body>
+
 
 <main class="wrap" id="app"><p class="small">Chargement…</p></main>
 
@@ -146,6 +170,7 @@ button.cell:hover{border-color:var(--muted)}
 <script src="lives-autres.js"></script>
 <script src="lives-humains.js"></script>
 <script src="lives-nac.js"></script>
+<script src="lives-pilotes.js"></script>
 <script src="interludes.js"></script>
 <script src="humain.js"></script>
 <script src="extras.js"></script>
@@ -198,8 +223,8 @@ function newState(k){
   const plan=L.ev.map((_,j)=>({m:j}));
   if(!L.human){const n=DEPTH[k]!=null?DEPTH[k]:5;const gaps=Math.max(1,L.ev.length-1);const cnt=Array(gaps).fill(0);for(let i=0;i<n;i++)cnt[Math.floor(Math.random()*gaps)]++;
     const out=[];plan.forEach((p,j)=>{out.push(p);if(j<gaps)for(let i=0;i<cnt[j];i++)out.push({i:1})});plan.length=0;plan.push(...out)}
-  return {k,env:ENV[k]||"bat",lieu:lieu0,pi:0,plan,queue:[],used:[],s:L.human?5:8,p:L.human?5:2,f:{},m:m0,picks,hist:[],el:0,d:0,
-    tag:String(Math.floor(Math.random()*9e8+1e8)),mort:null,res:null,cur:null,comp:null,rare:false}}
+  return {k,env:ENV[k]||"bat",lieu:lieu0,pi:0,plan,queue:[],used:L.noI?[...L.noI]:[],s:L.human?5:8,p:L.human?5:2,f:{},m:m0,picks,hist:[],el:0,d:0,
+    tag:String(Math.floor(Math.random()*9e8+1e8)),mort:null,res:null,cur:null,comp:null,rare:false,b:{},tr:5,nch:0}}
 function evAt(j){const e=LIVES[S.k].ev[j];return e.alt?e.alt[S.picks[j]]:e}
 function rawD(j){const e=LIVES[S.k].ev[j];return (e.alt?e.alt[0]:e).d}
 function save(){if(!S)return;LS.set("ism80_save4",{...S,el:S.el+(T0?Date.now()-T0:0)})}
@@ -214,7 +239,10 @@ function curEv(){const c=S.cur;if(!c)return null;
   if(c.t==="i"){const I=INTER.find(x=>x.id===c.id);return {...I,d:c.d,alea:1}}
   if(c.t==="a"){return {...ARCS[c.arc][c.idx],d:c.d,alea:1}}
   if(c.t==="r"){const R0=rareFor(S.k);return {...R0,d:c.d,end:1,rare:1}}}
-function choicesOf(e){return (e.c||[]).filter(o=>needOK(o.need))}
+function choicesOf(e){return (e.c||[]).filter(o=>needOK(o.need)&&(!o.ok||o.ok(S)))}
+function lockOf(o){if(o.lock){const w=o.lock(S);if(w)return w}if(o.maxP!=null&&S.p>o.maxP)return "Tu as trop peur.";if(o.minTr!=null&&(S.tr==null?5:S.tr)<o.minTr)return "Tu ne fais plus confiance aux humains.";return ""}
+const TY={i:"Instinct",l:"Lien",r:"Réaction"};
+function besoinsHTML(L){if(!L.besoins)return "";const B=S.b||{};return `<div class="besoins" aria-label="Tes besoins">${Object.entries(L.besoins).map(([k,n])=>{const v=B[k];const c=v==null?"":"b"+v;const t=v==null?"pas encore":v===2?"satisfait":v===1?"en partie":"empêché";return `<span class="bz ${c}" title="${t}">${esc(n)}</span>`}).join("")}</div>`}
 
 /* =================== ACCUEIL =================== */
 function intro(){
@@ -336,6 +364,7 @@ function renderPlay(){
     <div class="top"><span class="label">${esc(L.nom)} · ${esc(S.lieu)}</span><span class="label"><b>${S.tag.slice(0,3)} ${S.tag.slice(3,6)} ${S.tag.slice(6)}</b></span></div>
     ${lifeBar(S.d,L)}
     <div class="gauges"><span class="label">${g[0]}</span>${pips(S.s,"")}<span class="label">${g[1]}</span>${pips(S.p,"b")}</div>
+    ${besoinsHTML(L)}
     ${compHTML()}
     ${S.hist.length&&!L.human?`<span class="label" style="color:var(--hu)">${S.hist.filter(h=>h.hu).length} décision${S.hist.filter(h=>h.hu).length>1?"s":""} humaine${S.hist.filter(h=>h.hu).length>1?"s ont":" a"} déjà pesé sur ta vie</span>`:""}
   </div>
@@ -371,9 +400,10 @@ function renderAct(e){
     const go=()=>{KEY=null;S.hist.push({t:labelOf(e),x:sub(e.x),l:null,r:null,alea:e.alea,hu:e.hu?sub(e.hu):null});if(e.end)end();else next()};
     document.getElementById("dec").onclick=go;KEY=k=>{if(k==="Enter")go()};return;
   }
-  act.innerHTML=`<div class="choices" role="group" aria-label="Tes options">${ch.map((o,j)=>`<button class="choice" data-j="${j}"><span class="k">${j+1}</span><span>${esc(sub(o.l))}</span></button>`).join("")}</div>`;
-  act.querySelectorAll(".choice").forEach(b=>b.onclick=()=>decide(+b.dataset.j));
-  KEY=k=>{const n=parseInt(k,10);if(n>=1&&n<=ch.length)decide(n-1)};
+  const lk=ch.map(lockOf);if(lk.every(Boolean))lk[0]="";
+  act.innerHTML=`${e.ty&&TY[e.ty]?`<p class="ty">${TY[e.ty]}</p>`:""}<div class="choices" role="group" aria-label="Tes options">${ch.map((o,j)=>`<button class="choice" data-j="${j}" ${lk[j]?"disabled":""}><span class="k">${j+1}</span><span>${esc(sub(o.l))}${lk[j]?`<span class="why">${esc(lk[j])}</span>`:""}</span></button>`).join("")}</div>`;
+  act.querySelectorAll(".choice:not([disabled])").forEach(b=>b.onclick=()=>decide(+b.dataset.j));
+  KEY=k=>{const n=parseInt(k,10);if(n>=1&&n<=ch.length&&!lk[n-1])decide(n-1)};
 }
 const clamp=v=>Math.max(0,Math.min(10,v));
 function applyComp(cf){if(!cf||!S.comp)return;const c=S.comp;if(c.st==="dead"||c.st==="gone")return;
@@ -382,6 +412,8 @@ function applyComp(cf){if(!cf||!S.comp)return;const c=S.comp;if(c.st==="dead"||c
 function decide(j){
   KEY=null;const e=curEv();const o=choicesOf(e)[j];if(!o)return;
   S.s=clamp(S.s+(o.s||0));S.p=clamp(S.p+(o.p||0));if(o.f)S.f[o.f]=true;
+  if(!S.b)S.b={};if(o.b)for(const k in o.b){const pv=S.b[k],v=o.b[k];S.b[k]=pv==null?v:(v===0&&pv===2)?1:Math.max(pv,v)}
+  if(o.tr)S.tr=clamp((S.tr==null?5:S.tr)+o.tr);if(choicesOf(e).length>1)S.nch=(S.nch||0)+1;
   applyComp(o.comp);
   let r=sub(o.r||"");
   if(o.luck){const ok=Math.random()<o.luck.p;if(o.luck.f)S.f[o.luck.f]=ok;r=(r?r+" ":"")+sub(ok?o.luck.yes:o.luck.no);if(!ok)applyComp(o.luck.comp)}
@@ -396,6 +428,25 @@ function decide(j){
 }
 
 /* =================== FIN =================== */
+const BV={2:"satisfait",1:"en partie",0:"empêché"};
+function bVal(v){return v==null||v<0?"jamais":BV[v]}
+function pilotEnd(L,B,nch,nhu,rare){
+  const ch=nch>1?nch+" choix":nch===1?"1 choix":"aucun choix";
+  return `<section class="box"><p class="lede">Tu as fait ${ch}. Ils ont changé ta façon de vivre.${rare?" Ta fin a changé grâce à une main humaine, pas grâce à eux.":" Aucun n'a changé ta fin."} <b style="color:var(--hu)">${nhu} décision${nhu>1?"s":""} humaine${nhu>1?"s l'ont fixée":" l'a fixée"}.</b></p>
+   <h2>Tes besoins</h2><ul class="bilan">${Object.entries(L.besoins).map(([k,n])=>`<li>${esc(n)}</li><li class="v">${bVal(B[k])}</li>`).join("")}</ul></section>
+  ${L.cle?`<section class="box"><h2>La décision qui a le plus pesé</h2><p class="cle"><b>${esc(L.cle.hu.split(" — ")[0])}</b> ${esc(L.cle.hu.split(" — ")[1]||"")}</p>${L.cle.f?`<p class="small">${esc(L.cle.f)}</p>`:""}</section>`:""}
+  ${L.autre?`<section class="box autre" id="autre"><h2>${esc(L.autre.titre)}</h2><p class="small">La même vie, en accéléré, si cette décision avait été différente.</p><div class="row"><button class="btn" id="playautre">Voir cette autre vie</button></div></section>`:""}
+  <p class="decide">À ton tour de décider.</p>`}
+function playAutre(L,B){
+  const box=document.getElementById("autre");const A=L.autre;let i=0,tm=null;
+  box.innerHTML=`<h2>${esc(A.titre)}</h2><canvas class="scene sc2" id="cva" width="${W}" height="${H}" role="img" aria-label="L'autre vie"></canvas><p class="vt" id="avt"></p><p class="card" id="avx" aria-live="polite"></p><div class="row"><button class="btn ghost" id="anext">Suivant</button></div>`;
+  const show=()=>{const v=A.v[i];document.getElementById("avt").textContent=v.t;document.getElementById("avx").textContent=v.x;setScene(document.getElementById("cva"),{...L.sc,...(v.sc||{})},v.pl||L.sprite,i+2);
+    clearTimeout(tm);if(i<A.v.length-1)tm=setTimeout(()=>{i++;show()},REDUCE?99999:3200);else fin()};
+  const fin=()=>{const nb=document.getElementById("anext");if(nb)nb.remove();clearTimeout(tm);
+    box.insertAdjacentHTML("beforeend",`<h2 style="margin-top:18px">Tes besoins, dans les deux vies</h2><ul class="bilan" style="grid-template-columns:1fr auto auto"><li class="small">Besoin</li><li class="small">Ta vie</li><li class="small">L'autre</li>${Object.entries(L.besoins).map(([k,n])=>`<li>${esc(n)}</li><li class="v">${bVal(B[k])}</li><li class="v">${bVal(A.b[k])}</li>`).join("")}</ul>${A.f?`<div class="reel"><span class="label">Dans la réalité</span><p>${esc(A.f)}</p></div>`:""}`)};
+  document.getElementById("anext").onclick=()=>{if(i<A.v.length-1){i++;show()}};
+  show();box.scrollIntoView({behavior:REDUCE?"auto":"smooth",block:"start"});
+}
 function compEnd(L){if(!S.comp)return "";const c=S.comp,n=esc(c.nom);
   if(c.h)return c.st==="gone"?`${n} est parti avant toi. Tu l'as attendu.`:c.lien>=4?`${n} ne t'oubliera pas.`:`${n} se souviendra peut-être de toi.`;
   if(c.st==="dead")return `${n} est mort avant toi, ${dur(c.dd).t==="quelques heures"?"le premier jour":"à "+dur(c.dd).t}.`;
@@ -410,7 +461,7 @@ function end(){
   const born=realLife?Math.round(L.poids*1e6/31536000*sec):0;
   const others=Array.from({length:4},()=>drawReal()).map(k=>{const V=LIVES[k].ev;const fe=V.find(e=>e.end)||V[V.length-1];return {n:LIVES[k].nom,l:rnd(LIVES[k].lieux),d:fe.d,nat:LIVES[k].nat}});
   const shareTxt=L.human?`80 milliards — J'ai joué : ${L.nom} (${S.lieu}). Ma partie a duré ${clock(sec)}.`
-    :`80 milliards — J'ai tiré : ${L.nom} (${S.lieu}). J'ai vécu ${D.t} sur ${dur(nat).t} possibles (${fmtPct(ratio)}).${S.rare?" Fin rare.":""}${S.mort?" Mort avant l'heure.":""}`+" "+window.SITE;
+    :`80 milliards — J'ai tiré : ${L.nom} (${S.lieu}). J'ai vécu ${D.t} sur ${dur(nat).t} possibles (${fmtPct(ratio)}).${S.rare?" Fin rare.":""}${S.mort?" Mort avant l'heure.":""}${L.besoins?` ${S.nch||0} choix, ${S.hist.filter(h=>h.hu).length} décisions humaines. À ton tour de décider.`:""}`+" "+window.SITE;
   const C=LS.get("ism80_carnet5",{v:{},lives:0,sec:0,days:0,rares:0});
   const en=C.v[S.k]||{n:0,lieux:[],rare:0};en.n++;if(S.rare)en.rare=(en.rare||0)+1;if(!en.lieux.includes(S.lieu))en.lieux.push(S.lieu);C.v[S.k]=en;C.lives++;C.sec+=sec;if(S.rare)C.rares=(C.rares||0)+1;if(!L.human)C.days+=lived;LS.set("ism80_carnet5",C);LS.del("ism80_save4");
   const lastE=curEv()||L.ev[L.ev.length-1];
@@ -426,29 +477,31 @@ function end(){
     :`<p>Tu as vécu ${esc(D.t)}. ${esc(L.natTxt)}</p><p><b>${fmtPct(ratio)}</b> de ta vie possible.</p><p>${compEnd(L)}</p>`}
   </div>
   ${S.rare?`<div class="reel"><span class="label">Dans la réalité</span><p>${esc(lastE.f||"")}</p></div>`:""}
+  ${L.besoins?pilotEnd(L,S.b||{},S.nch||0,S.hist.filter(h=>h.hu).length,S.rare||!!S.f.adoptee)+etToiHTML(S.env,true,L.gestes):""}
   <p>Ta partie a duré ${clock(sec)}.${realLife?` Pendant ce temps, environ <b>${born.toLocaleString("fr-FR")}</b> autres animaux de ton espèce sont nés dans le monde.`:""}</p>
   ${!L.human&&PROD[S.k]?`<section class="box"><h2>Ce que ta vie est devenue pour les humains</h2><p class="prod">${esc(S.mort&&!PROD[S.k].startsWith("Rien")?"Rien. Tu es mort avant d'avoir servi. Pour ceux qui t'ont fait naître, une perte dans un registre.":PROD[S.k])}</p></section>`:""}
   ${L.human?"":actorsHTML()}
   <p class="small">${esc(L.note)}</p>
-  ${L.human?"":etToiHTML(S.env)}
+  ${L.human||L.besoins?"":etToiHTML(S.env)}
   <section class="box"><h2>Ta ligne de vie</h2><ol class="tl">${S.hist.map(pastHTML).join("")}${S.mort?`<li class="fin"><span class="age">${esc(labelOf(lastE))}</span><p class="small">Ta vie s'arrête ici, plus tôt que prévu.</p></li>`:""}</ol></section>
   ${L.human?"":`<section class="box"><h2>Nés à la même seconde que toi, dans la réalité</h2>
     <ul class="par">${others.map(o=>`<li><span>${esc(o.n)} · ${esc(o.l)}</span><span>${dur(o.d).t} / ${dur(o.nat).t}</span></li>`).join("")}</ul></section>`}
   <div class="row"><button class="btn" id="again">Renaître</button>${navigator.share?`<button class="btn ghost" id="natshare">Partager</button>`:""}<button class="btn ghost" id="mkcard">Créer ma carte</button><button class="btn ghost" id="copy">Copier mon résultat</button><button class="btn ghost" id="carnet">Carnet</button><button class="btn ghost" id="home">Accueil</button></div>
   <div class="toast" id="toast" aria-live="polite"></div>
   <div id="cardbox"></div>
-  <p class="small">Version de test. Une erreur dans un fait ? La page Sources dit comment la signaler.</p>`;
+  <p class="small">Version de test. Chaque fait est sourcé. Une erreur ? La page Sources dit comment la signaler.</p>`;
   setScene(document.getElementById("cv"),endSc,lastE.pl||L.sprite,3);
   statEnd({sec,steps:S.hist.length,rare:S.rare,mort:!!S.mort});
-  const cardData={nom:L.nom,lieu:S.lieu,human:L.human,n:D.n,u:D.u,mort:!!S.mort,ratio,pct:fmtPct(ratio),nat:dur(nat).t,rare:S.rare,t:lastE.t,hu:S.hist.filter(h=>h.hu).length,scene:document.getElementById("cv")};
+  const cardData={nom:L.nom,lieu:S.lieu,human:L.human,n:D.n,u:D.u,mort:!!S.mort,ratio,pct:fmtPct(ratio),nat:dur(nat).t,rare:S.rare,t:lastE.t,hu:S.hist.filter(h=>h.hu).length,nch:L.besoins?(S.nch||0):null,scene:document.getElementById("cv")};
   document.getElementById("mkcard").onclick=()=>{showCard(cardData);document.getElementById("cardbox").scrollIntoView({behavior:REDUCE?"auto":"smooth"})};
+  const ns=document.getElementById("natshare");if(ns)ns.onclick=async()=>{statMark({partage:true});const base={title:"80 milliards",text:shareTxt.replace(" "+window.SITE,""),url:window.SITE};
+    try{const cv=makeCard(cardData);const bl=await new Promise(r=>cv.toBlob(r,"image/png"));const f=bl&&new File([bl],"80-milliards.png",{type:"image/png"});
+      if(f&&navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({...base,files:[f]});else await navigator.share(base)}catch(e){}};
+  const pa=document.getElementById("playautre");if(pa){const B0={...(S.b||{})};pa.onclick=()=>playAutre(L,B0)}
   const wasHuman=L.human;S=null;
   document.getElementById("again").onclick=()=>roll(wasHuman?rnd(HUMANS()):WILD?drawWild():drawLife());
   document.getElementById("carnet").onclick=carnet;
   document.getElementById("home").onclick=intro;
-  const ns=document.getElementById("natshare");if(ns)ns.onclick=async()=>{statMark({partage:true});const base={title:"80 milliards",text:shareTxt.replace(" "+window.SITE,""),url:window.SITE};
-    try{const cv=makeCard(cardData);const bl=await new Promise(r=>cv.toBlob(r,"image/png"));const f=bl&&new File([bl],"80-milliards.png",{type:"image/png"});
-      if(f&&navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({...base,files:[f]});else await navigator.share(base)}catch(e){}};
   document.getElementById("copy").onclick=()=>{const t=document.getElementById("toast");
     statMark({partage:true});try{navigator.clipboard.writeText(shareTxt).then(()=>t.textContent="Résultat copié.",()=>t.textContent=shareTxt)}catch(e){t.textContent=shareTxt}};
   window.scrollTo(0,0);
@@ -482,4 +535,5 @@ document.addEventListener("keydown",e=>{if(!KEY||e.target.tagName==="INPUT")retu
 intro();
 </script>
 
-</body></html>
+</body>
+</html>

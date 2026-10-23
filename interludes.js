@@ -86,7 +86,7 @@ const ENV={};
 const FAM={poulet:"gallus",pondeuse:"gallus",poussin:"gallus",caille:"caille",porc:"porc",truie:"porc",sanglier:"porc",vache:"bovin",veau:"bovin",bovin:"bovin",souris:"rongeur",rat:"rongeur",lapinnain:"lapin",lapin:"lapin",tigre:"felin",lion:"felin"};
 const fam=k=>FAM[k]||k;
 /* nombre de moments aléatoires */
-const DEPTH={poussin:0,larve:2,ver:2,grillon:2,abeille:3,anchois:3,crevette:3,caille:3,poisson:4,chevreau:3,hamster:3,betta:2,poissonclown:3,axolotl:3,lion:3,fennec:3,thon:4,homard:4,poulpe:4,baleine:4,tortue:4};
+const DEPTH={poulet:3,pondeuse:3,porc:3,vache:3,saumon:3,poussin:0,larve:2,ver:2,grillon:2,abeille:3,anchois:3,crevette:3,caille:3,poisson:4,chevreau:3,hamster:3,betta:2,poissonclown:3,axolotl:3,lion:3,fennec:3,thon:4,homard:4,poulpe:4,baleine:4,tortue:4};
 const NAMES_A=["Tache","Grain","Plume","Lune","Pépite","Moka","Nuage","Brindille","Caillou","Bouton","Noisette","Écho","Miette","Orage","Poussière","Sel","Givre","Rouille","Paille","Suie"];
 const NAMES_H=["Léa","Inès","Sami","Noé","Jade","Malik","Rose","Tom","Yanis","Zoé","Lou","Ilyes","Nora","Hugo"];
 /* vie sociale : t = "a" compagnon animal, "h" humain ; p = probabilité ; absent = vie seule */

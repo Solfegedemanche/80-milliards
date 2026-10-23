@@ -143,32 +143,6 @@ L("poisson",{nom:"Poisson d'élevage",cat:"eau",poids:100000,sprite:"poisson",sc
   f:"Beaucoup de poissons d'élevage meurent par asphyxie à l'air ou sur la glace, sans étourdissement, ce qui peut prendre plusieurs minutes."}
  ]});
 
-L("saumon",{nom:"Saumon d'élevage",cat:"eau",poids:1000,sprite:"saumon",sc:{bg:"cagemer",n:40,who:"saumon"},
- lieux:["Norvège","Écosse","Chili","Îles Féroé","Canada"],cond:"Cage en mer",
- nat:2900,natTxt:"Un saumon atlantique sauvage peut vivre une dizaine d'années.",
- note:"La Norvège produit plus de la moitié du saumon d'élevage mondial.",
- ev:[
- {d:1,sc:{bg:"bassin",n:80,who:"saumon"},x:"Tu éclos dans une écloserie à terre, dans un grand bac d'eau douce.",
-  e:"Un saumon sauvage de l'Allier, qui remonte la rivière après 800 km : « Je reviens là où je suis né. »",
-  f:"Le saumon sauvage naît en rivière, part en mer, puis revient frayer dans sa rivière natale.",
-  c:[{l:"Rester au fond",r:"Tu vis de ta réserve vitelline."},{l:"Nager",r:"Tu te cognes aux parois.",p:1}]},
- {d:400,x:"On te transfère en mer, dans une cage en filet au milieu d'un fjord, avec des dizaines de milliers d'autres saumons.",
-  e:"Un pêcheur norvégien : « Avant, ici, il y avait des saumons sauvages. »",
-  f:"Une cage peut contenir jusqu'à 200 000 saumons. Les évasions menacent les populations sauvages.",
-  c:[{l:"Nager en cercle avec le banc",r:"Vous tournez en rond, comme tous les jours.",p:1},{l:"Rester au fond de la cage",r:"Il fait plus froid.",p:1}]},
- {d:550,x:"Des poux de mer s'accrochent à ta peau. Ils te rongent la tête.",
-  e:"Un chef de site : « On va passer au traitement thermique. »",
-  f:"Les poux de mer sont le principal problème de l'élevage de saumon. Les traitements consistent à passer les saumons quelques secondes dans de l'eau chauffée ou sous des jets d'eau.",
-  c:[{l:"Sauter hors de l'eau",r:"Tu sautes pour te débarrasser des poux. Ça marche un peu.",s:-1},{l:"Te frotter au filet",r:"Tu perds des écailles.",s:-2}]},
- {d:600,x:"On te pompe hors de la cage pour le traitement. L'eau est chaude. Tu te débats.",
-  e:"Un vétérinaire de l'Institut vétérinaire norvégien : « La mortalité a encore augmenté cette année. »",
-  f:"En 2024, en Norvège, 15,4 % des saumons mis en mer sont morts avant l'abattage, soit près de 58 millions de poissons, selon l'Institut vétérinaire norvégien.",
-  c:[{l:"Te débattre",r:"Tu cognes les parois du tuyau.",s:-2,risk:{p:.15,t:"Tu ne te remets pas du traitement."}},{l:"Te laisser porter",r:"C'est fini en quelques secondes.",s:-1}]},
- {d:900,end:1,x:"Tu pèses cinq kilos. Un bateau-vivier vient chercher toute la cage.",
-  e:"Un client, devant des sushis : « Saumon, c'est le plus doux. »",
-  f:"En Norvège, l'étourdissement des saumons avant l'abattage est obligatoire, par choc électrique ou percussion."}
- ]});
-
 L("crevette",{nom:"Crevette d'élevage",cat:"eau",poids:300000,sprite:"crevette",sc:{bg:"etang",n:60,who:"crevette"},
  lieux:["Vietnam","Équateur","Inde","Thaïlande","Indonésie","Chine"],cond:"Bassin d'aquaculture",
  nat:600,natTxt:"Une crevette peut vivre 1 à 2 ans.",
