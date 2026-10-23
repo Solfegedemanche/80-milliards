@@ -59,12 +59,18 @@ const SOURCES=[
  ["Séparation de la vache et du veau","Chaire bien-être animal, VetAgro Sup","https://chaire-bea.vetagro-sup.fr/en/calves-are-separated-from-their-mothers-at-birth-true-or-false/"],
  ["Empreinte olfactive et retour des salmonidés vers leur rivière","Ifremer","https://archimer.ifremer.fr/doc/00000/6053"],
  ["Règlement européen sur l'agriculture biologique (2018/848)","EUR-Lex","https://eur-lex.europa.eu/eli/reg/2018/848/oj"],
+ ["Identification des bovins (boucles, numéro national)","Académie d'agriculture de France","https://academie-agriculture.fr/sites/default/files/publications/encyclopedie/identification_des_bovins.pdf"],
+ ["Identification des porcins (tatouage de l'indicatif d'élevage)","Chambres d'agriculture de Bretagne","https://bretagne.chambres-agriculture.fr/fileadmin/user_upload/Bretagne/179_Inst-Bretagne/1-Projets/Reglementation/PDF/role_eleveur_identification_porcins_2020.pdf"],
+ ["Identification des moutons et des chèvres (règlement 21/2004)","EUR-Lex","https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32004R0021"],
+ ["Identification des chiens, chats et furets","I-CAD","https://www.i-cad.fr/"],
+ ["Animaux utilisés à des fins scientifiques (directive 2010/63)","EUR-Lex","https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32010L0063"],
+ ["Fichier central des équidés (SIRE)","Institut français du cheval et de l'équitation","https://www.ifce.fr/"],
 ];
 function sources(){
   KEY=null;
   app.innerHTML=`<div class="label">80 milliards · <b>Sources</b></div>
   <h1>D'où viennent les faits du jeu.</h1>
-  <p class="lede">Chaque étape affiche un fait sous « Dans la réalité ». Ces faits viennent des sources ci-dessous. Les chiffres sont arrondis et ont été revérifiés en octobre 2026. Quand les estimations divergent, le jeu donne une fourchette ou l'ordre de grandeur le plus prudent.</p>
+  <p class="lede">Chaque étape affiche un fait sous « Dans la réalité ». Ces faits viennent des sources ci-dessous. Les chiffres sont arrondis et ont été revérifiés en octobre 2026. Les numéros d'identification affichés sur les étiquettes sont fictifs ; leur format, lui, est réel. Quand les estimations divergent, le jeu donne une fourchette ou l'ordre de grandeur le plus prudent.</p>
   <ul class="srcs">${SOURCES.map(([t,o,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a><span class="small">${esc(o)}</span></li>`).join("")}</ul>
   <p class="small">Une erreur ? Note l'espèce, l'étape et la phrase, et signale-la à l'équipe du jeu.</p>
   <div class="row"><button class="btn" id="back">Accueil</button></div>`;

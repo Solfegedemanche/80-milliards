@@ -23,15 +23,20 @@
   --bg:#0e1112; --panel:#161a1c; --panel2:#1c2124; --fg:#ebe7de; --muted:#8d9496; --line:#283033;
   --tag:#f2c230; --tag-ink:#1a1608; --dim:#3a4246; --reel:#9fb8b0;
   --serif:"Newsreader", Georgia, "Times New Roman", serif;
-  --px:"Archivo", "Helvetica Neue", Arial, sans-serif; --hu:#e0a080;
+  --px:"Archivo", "Helvetica Neue", Arial, sans-serif; --hu:#e0a080; --acc:#f2c230; --resp:#d6d0c4;
+  --okb:#6a8a62; --okf:#b8d4ae; --wb:#a8843a; --wf:#e8c47a; --nb:#7a4a44; --nf:#d39a90;
   color-scheme:dark;
 }
+:root[data-theme="light"]{--bg:#f3f0e8; --panel:#fffdf7; --panel2:#ebe7dd; --fg:#1a1c1d; --muted:#545b5e; --line:#d9d4c9; --dim:#a39d91; --reel:#2f6457; --hu:#9a4620; --acc:#7a5c00; --resp:#3a372f;
+  --okb:#5f8a55; --okf:#2f5a27; --wb:#a8843a; --wf:#7a5a12; --nb:#b07066; --nf:#8a3a30; color-scheme:light}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#f3f0e8; --panel:#fffdf7; --panel2:#ebe7dd; --fg:#1a1c1d; --muted:#545b5e; --line:#d9d4c9; --dim:#a39d91; --reel:#2f6457; --hu:#9a4620; --acc:#7a5c00; --resp:#3a372f;
+  --okb:#5f8a55; --okf:#2f5a27; --wb:#a8843a; --wf:#7a5a12; --nb:#b07066; --nf:#8a3a30; color-scheme:light}}
 html,body{min-height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--serif);font-size:18px;line-height:1.55;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
-.wrap{max-width:620px;margin:0 auto;padding-block:20px 56px;display:flex;flex-direction:column;gap:22px}
+.wrap{zoom:var(--zoom,1);max-width:620px;margin:0 auto;padding-block:20px 56px;display:flex;flex-direction:column;gap:22px}
 .label{font-family:var(--px);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.45}
-.label b{color:var(--tag);font-weight:400}
+.label b{color:var(--acc);font-weight:400}
 h1{font-weight:500;font-size:clamp(26px,6.6vw,36px);line-height:1.15;margin:0;text-wrap:balance}
 h2{font-family:var(--px);font-weight:600;font-size:13px;text-transform:uppercase;margin:0;letter-spacing:.08em;color:var(--muted)}
 p{margin:0}
@@ -50,7 +55,7 @@ section.box{display:flex;flex-direction:column;gap:12px;border-top:2px solid var
 .modes{display:flex;gap:8px;flex-wrap:wrap}
 .modes label{font-family:var(--px);font-size:14px;font-weight:500;border:1px solid var(--dim);border-radius:8px;padding:8px 12px;cursor:pointer;display:flex;gap:8px;align-items:center}
 .modes input{accent-color:var(--tag)}
-.modes label:has(input:checked){border-color:var(--tag);color:var(--tag)}
+.modes label:has(input:checked){border-color:var(--acc);color:var(--acc)}
 .bar{display:flex;height:18px;gap:2px}.bar span{min-width:2px}
 .barl{display:flex;justify-content:space-between}
 .cats{display:flex;flex-direction:column;border-top:2px solid var(--line)}
@@ -76,7 +81,7 @@ section.box{display:flex;flex-direction:column;gap:12px;border-top:2px solid var
 .gauge{height:8px;display:flex;gap:1px}.gauge i{flex:1;background:var(--line)}.gauge i.on{background:var(--fg)}.gauge.b i.on{background:var(--muted)}
 .comp{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .chip{font-family:var(--px);font-size:13px;font-weight:500;border:1px solid var(--line);border-radius:20px;padding:3px 10px}
-.chip.ok{border-color:#6a8a62;color:#b8d4ae}.chip.sick{border-color:#a8843a;color:#e8c47a}.chip.dead,.chip.gone{border-color:var(--dim);color:var(--muted)}
+.chip.ok{border-color:var(--okb);color:var(--okf)}.chip.sick{border-color:var(--wb);color:var(--wf)}.chip.dead,.chip.gone{border-color:var(--dim);color:var(--muted)}
 .hearts{font-size:13px;color:#d0574c;letter-spacing:2px}
 ol.tl{list-style:none;margin:0;padding:0 0 0 22px;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:18px}
 ol.tl>li{position:relative;display:flex;flex-direction:column;gap:6px;min-width:0}
@@ -85,13 +90,13 @@ ol.tl>li.now::before{background:var(--tag)}
 ol.tl>li.alea::before{background:#5a7a8a}
 ol.tl>li.fin::before{background:var(--fg)}
 .age{font-family:var(--px);font-size:13px;font-weight:600;color:var(--muted)}
-li.now>.age{color:var(--tag);font-size:20px;font-weight:700}
+li.now>.age{color:var(--acc);font-size:20px;font-weight:700}
 .past p{font-size:15px;color:var(--muted)}
 .past .ch{font-family:var(--px);font-size:13px;font-weight:600;color:var(--fg)}
 .past .hh{font-family:var(--px);font-size:12px;color:var(--hu)}
 .past .rs{font-style:italic}
 .card{font-size:20px;line-height:1.5}
-.resp{font-size:19px;font-style:italic;color:#d6d0c4;border-left:4px solid var(--tag);padding-left:12px}
+.resp{font-size:19px;font-style:italic;color:var(--resp);border-left:4px solid var(--tag);padding-left:12px}
 .reel{background:var(--panel);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
 .reel .label{color:var(--reel)}
 .reel p{font-size:16px;line-height:1.45}
@@ -102,11 +107,22 @@ li.now>.age{color:var(--tag);font-size:20px;font-weight:700}
 .choice[disabled]{opacity:.45;cursor:default}.choice[disabled]:hover{border-color:var(--line)}.choice .why{display:block;font-family:var(--px);font-size:12px;color:var(--muted);margin-top:3px}
 .ty{font-family:var(--px);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--reel);margin:0 0 6px}
 .besoins{display:flex;flex-wrap:wrap;gap:6px}.bz{font-family:var(--px);font-size:12px;border:1px solid var(--line);border-radius:20px;padding:2px 9px;color:var(--muted)}
-.bz.b2{border-color:#6a8a62;color:#b8d4ae}.bz.b1{border-color:#a8843a;color:#e8c47a}.bz.b0{border-color:#7a4a44;color:#d39a90;text-decoration:line-through}
+.bz.b2{border-color:var(--okb);color:var(--okf)}.bz.b1{border-color:var(--wb);color:var(--wf)}.bz.b0{border-color:var(--nb);color:var(--nf);text-decoration:line-through}
 .bilan{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr auto;gap:6px 12px}.bilan .v{font-family:var(--px);font-size:13px}
 .cle{border-left:3px solid var(--hu);padding:4px 0 4px 14px}.cle b{color:var(--hu)}
 .autre .sc2{width:100%;height:auto;image-rendering:pixelated;border-radius:8px;display:block}.autre .vt{font-family:var(--px);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:10px}
 .decide{font-family:var(--serif);font-size:32px;line-height:1.15;margin:28px 0 6px}
+[hidden]{display:none!important}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.setb{padding:4px 0}.setp{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.sg{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.sg .label{min-width:56px}
+.sb{font-family:var(--px);font-size:14px;background:transparent;color:var(--fg);border:1px solid var(--dim);border-radius:8px;padding:6px 12px}.sb.on{border-color:var(--acc);color:var(--acc);font-weight:600}
+.idt{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;position:relative}.idt b{color:var(--acc);font-weight:500}
+.ib{font-family:var(--serif);font-style:italic;font-weight:600;font-size:12px;line-height:1;width:18px;height:18px;border-radius:50%;border:1px solid var(--muted);background:transparent;color:var(--muted);padding:0;display:inline-flex;align-items:center;justify-content:center;text-transform:none;letter-spacing:0}
+.ib:hover,.ib[aria-expanded="true"]{border-color:var(--acc);color:var(--acc)}
+.itxt{display:block;flex-basis:100%;font-family:var(--px);font-size:13px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:4px;line-height:1.4;max-width:420px}
+.defi{background:var(--panel);border:1px solid var(--acc);border-radius:10px;padding:12px 14px}
+.tagw{display:flex;flex-direction:column;gap:8px;align-items:flex-start}.tag .num.long{font-size:17px}.tag.none{background:var(--dim)}
 .future{color:var(--dim);font-family:var(--px);font-size:13px}
 .main{border-left:3px solid var(--hu);padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:2px}
 .main .label{color:var(--hu)}
@@ -135,7 +151,7 @@ li.now>.age{color:var(--tag);font-size:20px;font-weight:700}
 .par{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:2px solid var(--line)}
 .par li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:2px solid var(--line);font-size:16px}
 .par li span:last-child{font-family:var(--px);font-size:13px;color:var(--muted);white-space:nowrap;align-self:center}
-.toast{font-family:var(--px);font-size:14px;color:var(--tag);min-height:1.2em}
+.toast{font-family:var(--px);font-size:14px;color:var(--acc);min-height:1.2em}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
 .cell{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0;text-align:left;color:var(--fg)}
 .cell .dot{width:10px;height:10px;border-radius:50%}
@@ -146,7 +162,7 @@ button.cell:hover{border-color:var(--muted)}
 .totals div{display:flex;flex-direction:column;gap:2px}
 .totals strong{font-family:var(--px);font-size:26px;font-weight:700}
 .gestes{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:18px}
-.gestes li::marker{color:var(--tag);font-family:var(--px);font-weight:700}
+.gestes li::marker{color:var(--acc);font-family:var(--px);font-weight:700}
 .srcs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .srcs li{display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--line);padding-bottom:10px}
 .srcs a{color:var(--fg);font-family:var(--px);font-weight:600}
@@ -162,7 +178,7 @@ button.cell:hover{border-color:var(--muted)}
 
 <main class="wrap" id="app"><p class="small">Chargement…</p></main>
 
-<script>window.SITE="https://solfegedemanche.github.io/80-milliards/";window.LIVES={};function L(k,o){o.k=k;LIVES[k]=o}</script>
+<script>window.SITE="https://solfegedemanche.github.io/80-milliards/";window.TIKTOK="";window.LIVES={};function L(k,o){o.k=k;LIVES[k]=o}</script>
 <script src="sprites.js"></script>
 <script src="scenes.js"></script>
 <script src="lives-terre.js"></script>
@@ -174,6 +190,8 @@ button.cell:hover{border-color:var(--muted)}
 <script src="interludes.js"></script>
 <script src="humain.js"></script>
 <script src="extras.js"></script>
+<script src="etiquettes.js"></script>
+<script src="reglages.js"></script>
 <script>
 /* =================== RÉGLAGES =================== */
 const CATS={
@@ -251,15 +269,17 @@ function intro(){
   const catTot={};Object.keys(CATS).forEach(c=>catTot[c]=P.filter(k=>LIVES[k].cat===c).reduce((a,k)=>a+game(k),0));
   const catReal={};Object.keys(CATS).forEach(c=>catReal[c]=P.filter(k=>LIVES[k].cat===c).reduce((a,k)=>a+real(k),0));
   const nb=ANIMALS().length;
+  const DF=defiParam();
   app.innerHTML=`
-  <div class="label"><b>80 milliards</b> · Une vie tirée au sort</div>
+  <div class="topbar"><div class="label"><b>80 milliards</b> · Une vie tirée au sort</div>${reglagesHTML()}</div>
+  ${DF?`<div class="defi fade"><p><b>On te lance un défi.</b> Ton ami est né ${esc(DF.nom.toLowerCase())}${DF.j?` et a vécu ${esc(dur(DF.j).t)}`:""}. Toi, tu ne choisiras pas non plus.</p></div>`:""}
   <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="Un hangar rempli de poulets"></canvas>
   <h1>Chaque année, plus de 80 milliards d'animaux terrestres sont élevés puis abattus. Tu vas naître.</h1>
   <p class="lede">Tu ne choisis ni ton espèce, ni ton pays. Ta vie avance, entre ce qui arrive vraiment et ce que le hasard te réserve.</p>
   <p class="small">Conseillé à partir de 12 ans. Le jeu parle de la vie et de la mort des animaux, avec des mots simples et sans images violentes.</p>
   <div class="row">${valid?`<button class="btn" id="resume">Reprendre : ${esc(LIVES[sv.k].nom)}</button><button class="btn ghost" id="go">Naître à nouveau</button>`:`<button class="btn" id="go">Naître</button>`}</div>
   <div class="row"><button class="btn ghost" id="wild">Mode Vies sauvages</button><button class="btn ghost" id="hum">Naître humain dans la chaîne</button></div>
-  <div class="row"><button class="btn ghost" id="carnet">Carnet</button><button class="btn ghost" id="src">Sources</button><span id="ownerslot">${OWNER&&DB?`<button class="btn ghost" id="stats">Statistiques des tests</button>`:""}</span></div>
+  <div class="row"><button class="btn ghost" id="carnet">Carnet</button><button class="btn ghost" id="src">Sources</button>${window.TIKTOK?`<a class="btn ghost" href="${esc(window.TIKTOK)}" target="_blank" rel="noopener">Suivre sur TikTok</a>`:""}<span id="ownerslot">${OWNER&&DB?`<button class="btn ghost" id="stats">Statistiques des tests</button>`:""}</span></div>
   <section class="box" aria-label="Le tirage">
     <h2>Le tirage · ${P.length} vies sur ${nb}</h2>
     <div class="modes" role="radiogroup" aria-label="Mode de tirage">
@@ -274,8 +294,8 @@ function intro(){
       <ul><li class="hd">Espèce</li><li class="hd">Réel</li><li class="hd">Jeu</li>${ks.map(k=>`<li>${esc(LIVES[k].nom)}${LIVES[k].sym?' <span class="small">· symbolique</span>':""}</li><li class="pc">${on?fmtPct(real(k)):"—"}</li><li class="pc">${on?fmtPct(game(k)):"—"}</li>`).join("")}</ul></details>`}).join("")}</div>
     <p class="small">« Réel » : part des naissances par an, en ordres de grandeur (FAO, Our World in Data, Fishcount, Rethink Priorities), à vérifier. Les vies « symboliques » ont un poids fictif.</p>
   </section>`;
-  setScene(document.getElementById("cv"),{bg:"hangar",n:60},"poulet",42);
-  document.getElementById("go").onclick=()=>{LS.del("ism80_save4");WILD=false;roll(drawLife())};
+  setScene(document.getElementById("cv"),{bg:"hangar",n:60},"poulet",42);bindReglages();
+  document.getElementById("go").onclick=()=>{SND.start();LS.del("ism80_save4");WILD=false;roll(drawLife())};
   document.getElementById("hum").onclick=()=>{LS.del("ism80_save4");WILD=false;roll(rnd(HUMANS()))};
   document.getElementById("carnet").onclick=carnet;
   document.getElementById("src").onclick=sources;
@@ -299,7 +319,7 @@ function roll(k){
   tick();
 }
 function reveal(){
-  const L=LIVES[S.k],t=S.tag;
+  const L=LIVES[S.k],t=S.tag,IT=idTag(S);
   setScene(document.getElementById("cv"),{...L.sc,...(L.ev[0].sc||{})},L.ev[0].pl||L.sprite,7);
   document.getElementById("roll").textContent=L.human?"Tu es né humain.":"Tu es né.";
   const real=share(wReal)(S.k),game=share(k=>wMode(k,null))(S.k);
@@ -308,7 +328,7 @@ function reveal(){
   if(!L.human&&!S.comp&&SO&&Math.random()<SO.p)S.comp={nom:rnd(pre),h:C0.h,st:"ok",lien:3};
   document.getElementById("rev").outerHTML=`
   <div class="reveal fade">
-    <div class="tag" aria-hidden="true"><span class="cc">${L.human?"ID":L.cat==="terre"?"LOT":"N°"}</span><span class="num">${t.slice(0,3)} ${t.slice(3,6)}</span><span class="num2">${t.slice(6)}</span></div>
+    <div class="tagw"><div class="tag ${IT.none?"none":""}" aria-hidden="true"><span class="cc">${esc(IT.a)}</span><span class="num ${IT.b.length>7?"long":""}">${esc(IT.b)}</span><span class="num2">${esc(IT.c)}</span></div>${idHTML(IT,"")}</div>
     <div class="facts">
       <div class="sp">${esc(L.nom)}</div>
       <div>${esc(S.lieu)}</div>
@@ -319,7 +339,8 @@ function reveal(){
   </div>
   ${S.comp?`<p class="fade">${esc(C0.t)} ${C0.h?"Son prénom":"On l'appellera"} : <b>${esc(S.comp.nom)}</b>.</p>`:(!L.human&&!SO?`<p class="fade small">Tu vivras seul.</p>`:"")}
   <div class="row"><button class="btn fade" id="start">Commencer ta vie</button></div>`;
-  document.getElementById("start").onclick=()=>{T0=Date.now();statStart();next()};
+  bindInfo(app);
+  document.getElementById("start").onclick=()=>{SND.start();T0=Date.now();statStart();next()};
 }
 
 /* =================== AVANCÉE =================== */
@@ -361,7 +382,7 @@ function renderPlay(){
   const L=LIVES[S.k];const e=curEv();const g=L.g||["Santé","Peur"];
   app.innerHTML=`
   <div class="head">
-    <div class="top"><span class="label">${esc(L.nom)} · ${esc(S.lieu)}</span><span class="label"><b>${S.tag.slice(0,3)} ${S.tag.slice(3,6)} ${S.tag.slice(6)}</b></span></div>
+    <div class="top"><span class="label">${esc(L.nom)} · ${esc(S.lieu)}</span><span class="label">${idHTML(idTag(S))}</span></div>
     ${lifeBar(S.d,L)}
     <div class="gauges"><span class="label">${g[0]}</span>${pips(S.s,"")}<span class="label">${g[1]}</span>${pips(S.p,"b")}</div>
     ${besoinsHTML(L)}
@@ -378,12 +399,12 @@ function renderPlay(){
     </li>
     <li class="past"><span class="future">${e.end?"Fin":"La suite de ta vie…"}</span></li>
   </ol>
-  <button class="btn quiet" id="quit">Sauvegarder et quitter</button>`;
+  <div class="topbar"><button class="btn quiet" id="quit">Sauvegarder et quitter</button>${reglagesHTML()}</div>`;
   const sc={...L.sc,...(e.sc||{})};
   setScene(document.getElementById("cv"),sc,e.pl||L.sprite,(S.pi*13+S.tag.charCodeAt(0))%5+1);
   if(S.mort&&CUR){CUR.pl=null;CUR.spec={...CUR.spec,dark:.5}}
   document.getElementById("quit").onclick=()=>{save();S=null;T0=0;intro()};
-  renderAct(e);
+  renderAct(e);bindInfo(app);bindReglages();SND.set(sc.bg,sc.night);
   const now=document.getElementById("now");if(S.hist.length)now.scrollIntoView({block:"start",behavior:REDUCE?"auto":"smooth"});
 }
 function reelHTML(e){const f=e.f||"";return f?`<div class="reel fade"><span class="label">Dans la réalité</span><p>${esc(sub(f))}</p></div>`:""}
@@ -427,6 +448,9 @@ function decide(j){
   S.res={r,ending};save();renderPlay();
 }
 
+/* =================== DÉFI =================== */
+function defiURL(k,j){const u=window.SITE||location.href.split("?")[0];return k?u+"?defi="+encodeURIComponent(k)+"&j="+Math.round(j||0):u}
+function defiParam(){try{const q=new URLSearchParams(location.search);const k=q.get("defi");if(!k||!LIVES[k]||LIVES[k].human)return null;return {k,nom:LIVES[k].nom,j:+q.get("j")||0}}catch(e){return null}}
 /* =================== FIN =================== */
 const BV={2:"satisfait",1:"en partie",0:"empêché"};
 function bVal(v){return v==null||v<0?"jamais":BV[v]}
@@ -461,13 +485,13 @@ function end(){
   const born=realLife?Math.round(L.poids*1e6/31536000*sec):0;
   const others=Array.from({length:4},()=>drawReal()).map(k=>{const V=LIVES[k].ev;const fe=V.find(e=>e.end)||V[V.length-1];return {n:LIVES[k].nom,l:rnd(LIVES[k].lieux),d:fe.d,nat:LIVES[k].nat}});
   const shareTxt=L.human?`80 milliards — J'ai joué : ${L.nom} (${S.lieu}). Ma partie a duré ${clock(sec)}.`
-    :`80 milliards — J'ai tiré : ${L.nom} (${S.lieu}). J'ai vécu ${D.t} sur ${dur(nat).t} possibles (${fmtPct(ratio)}).${S.rare?" Fin rare.":""}${S.mort?" Mort avant l'heure.":""}${L.besoins?` ${S.nch||0} choix, ${S.hist.filter(h=>h.hu).length} décisions humaines. À ton tour de décider.`:""}`+" "+window.SITE;
+    :`80 milliards — J'ai tiré : ${L.nom} (${S.lieu}). J'ai vécu ${D.t} sur ${dur(nat).t} possibles (${fmtPct(ratio)}).${S.rare?" Fin rare.":""}${S.mort?" Mort avant l'heure.":""}${L.besoins?` ${S.nch||0} choix, ${S.hist.filter(h=>h.hu).length} décisions humaines. À ton tour de décider.`:""}`+" "+defiURL(S.k,lived);
   const C=LS.get("ism80_carnet5",{v:{},lives:0,sec:0,days:0,rares:0});
   const en=C.v[S.k]||{n:0,lieux:[],rare:0};en.n++;if(S.rare)en.rare=(en.rare||0)+1;if(!en.lieux.includes(S.lieu))en.lieux.push(S.lieu);C.v[S.k]=en;C.lives++;C.sec+=sec;if(S.rare)C.rares=(C.rares||0)+1;if(!L.human)C.days+=lived;LS.set("ism80_carnet5",C);LS.del("ism80_save4");
   const lastE=curEv()||L.ev[L.ev.length-1];
   const endSc=S.mort?{...L.sc,...(lastE.sc||{}),dark:.55,nopl:1}:{...L.sc,...(lastE.sc||{})};
   app.innerHTML=`
-  <div class="label">${esc(L.nom)} · ${esc(S.lieu)} · <b>${S.tag.slice(0,3)} ${S.tag.slice(3,6)} ${S.tag.slice(6)}</b></div>
+  <div class="label">${esc(L.nom)} · ${esc(S.lieu)} · ${idHTML(idTag(S))}</div>
   <canvas class="scene" id="cv" width="${W}" height="${H}" role="img" aria-label="Dernière scène"></canvas>
   ${S.rare?`<span class="rare">Fin rare</span>`:""}
   ${L.human?`<div class="fade"><div class="big">${esc(lastE.t||"")}</div><div class="label">fin de ton histoire</div></div>`
@@ -490,11 +514,11 @@ function end(){
   <div class="toast" id="toast" aria-live="polite"></div>
   <div id="cardbox"></div>
   <p class="small">Version de test. Chaque fait est sourcé. Une erreur ? La page Sources dit comment la signaler.</p>`;
-  setScene(document.getElementById("cv"),endSc,lastE.pl||L.sprite,3);
+  setScene(document.getElementById("cv"),endSc,lastE.pl||L.sprite,3);bindInfo(app);SND.mood(true);const cardK=S.k,cardD=lived;
   statEnd({sec,steps:S.hist.length,rare:S.rare,mort:!!S.mort});
   const cardData={nom:L.nom,lieu:S.lieu,human:L.human,n:D.n,u:D.u,mort:!!S.mort,ratio,pct:fmtPct(ratio),nat:dur(nat).t,rare:S.rare,t:lastE.t,hu:S.hist.filter(h=>h.hu).length,nch:L.besoins?(S.nch||0):null,scene:document.getElementById("cv")};
   document.getElementById("mkcard").onclick=()=>{showCard(cardData);document.getElementById("cardbox").scrollIntoView({behavior:REDUCE?"auto":"smooth"})};
-  const ns=document.getElementById("natshare");if(ns)ns.onclick=async()=>{statMark({partage:true});const base={title:"80 milliards",text:shareTxt.replace(" "+window.SITE,""),url:window.SITE};
+  const ns=document.getElementById("natshare");if(ns)ns.onclick=async()=>{statMark({partage:true});const DU=defiURL(LIVES[cardK].human?null:cardK,cardD);const base={title:"80 milliards",text:shareTxt.replace(" "+DU,""),url:DU};
     try{const cv=makeCard(cardData);const bl=await new Promise(r=>cv.toBlob(r,"image/png"));const f=bl&&new File([bl],"80-milliards.png",{type:"image/png"});
       if(f&&navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({...base,files:[f]});else await navigator.share(base)}catch(e){}};
   const pa=document.getElementById("playautre");if(pa){const B0={...(S.b||{})};pa.onclick=()=>playAutre(L,B0)}
