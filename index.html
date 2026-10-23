@@ -178,7 +178,7 @@ button.cell:hover{border-color:var(--muted)}
 
 <main class="wrap" id="app"><p class="small">…</p></main>
 
-<script>window.SITE="https://solfegedemanche.github.io/80-milliards/";window.TIKTOK="";window.LANG=(function(){try{const q=new URLSearchParams(location.search).get("lang");if(q==="en"||q==="fr")return q;const p=JSON.parse(localStorage.getItem("ism80_pref")||"{}");if(p.lang)return p.lang}catch(e){}return (navigator.language||"fr").toLowerCase().startsWith("fr")?"fr":"en"})();document.documentElement.lang=LANG;if(LANG==="en")document.write('<script src="en.js"><\/script>');window.LIVES={};function L(k,o){o.k=k;LIVES[k]=o}</script>
+<script>window.SITE="https://solfegedemanche.github.io/80-milliards/";window.TIKTOK="https://www.tiktok.com/@1v80milliards";window.LANG=(function(){try{const q=new URLSearchParams(location.search).get("lang");if(q==="en"||q==="fr")return q;const p=JSON.parse(localStorage.getItem("ism80_pref")||"{}");if(p.lang)return p.lang}catch(e){}return (navigator.language||"fr").toLowerCase().startsWith("fr")?"fr":"en"})();document.documentElement.lang=LANG;if(LANG==="en")document.write('<script src="en.js"><\/script>');window.LIVES={};function L(k,o){o.k=k;LIVES[k]=o}</script>
 <script src="i18n.js"></script>
 <script src="sprites.js"></script>
 <script src="scenes.js"></script>
@@ -512,7 +512,7 @@ function end(){
   <section class="box"><h2>${tr("Ta ligne de vie","Your lifeline")}</h2><ol class="tl">${S.hist.map(pastHTML).join("")}${S.mort?`<li class="fin"><span class="age">${esc(labelOf(lastE))}</span><p class="small">${tr("Ta vie s'arrête ici, plus tôt que prévu.","Your life ends here, sooner than planned.")}</p></li>`:""}</ol></section>
   ${L.human?"":`<section class="box"><h2>${tr("Nés à la même seconde que toi, dans la réalité","Born in the same second as you, in reality")}</h2>
     <ul class="par">${others.map(o=>`<li><span>${esc(o.n)} · ${esc(o.l)}</span><span>${dur(o.d).t} / ${dur(o.nat).t}</span></li>`).join("")}</ul></section>`}
-  <div class="row"><button class="btn" id="again">${tr("Renaître","Be born again")}</button>${navigator.share?`<button class="btn ghost" id="natshare">${tr("Partager","Share")}</button>`:""}<button class="btn ghost" id="mkcard">${tr("Créer ma carte","Make my card")}</button><button class="btn ghost" id="copy">${tr("Copier mon résultat","Copy my result")}</button><button class="btn ghost" id="carnet">${tr("Carnet","Logbook")}</button><button class="btn ghost" id="home">${tr("Accueil","Home")}</button></div>
+  <div class="row"><button class="btn" id="again">${tr("Renaître","Be born again")}</button>${navigator.share?`<button class="btn ghost" id="natshare">${tr("Partager","Share")}</button>`:""}<button class="btn ghost" id="mkcard">${tr("Créer ma carte","Make my card")}</button><button class="btn ghost" id="copy">${tr("Copier mon résultat","Copy my result")}</button><button class="btn ghost" id="carnet">${tr("Carnet","Logbook")}</button><button class="btn ghost" id="home">${tr("Accueil","Home")}</button>${window.TIKTOK?`<a class="btn ghost" href="${esc(window.TIKTOK)}" target="_blank" rel="noopener">${tr("Suivre sur TikTok","Follow on TikTok")}</a>`:""}</div>
   <div class="toast" id="toast" aria-live="polite"></div>
   <div id="cardbox"></div>
   <p class="small">${tr("Version de test. Chaque fait est sourcé. Une erreur ? La page Sources dit comment la signaler.","Test version. Every fact is sourced. Spotted an error? The Sources page explains how to report it.")}</p>`;
